@@ -9,5 +9,10 @@
 		"sim2real_client_dev"
 	],
 	"settings": {},
-	"extensions": []
+	"extensions": [
+		"llvm-vs-code-extensions.vscode-clangd",
+		"twxs.cmake",
+		"redhat.vscode-xml",
+		"ms-python.python"
+	]
 }

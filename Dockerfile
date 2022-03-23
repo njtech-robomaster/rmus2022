@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1
 
 FROM rmus2022/client:v1.2.0 as base
+RUN apt-get update
+RUN apt-get install -y jq
 RUN usermod -s /bin/bash sim2real
 USER sim2real
 ENV QT_X11_NO_MITSHM=1
@@ -14,6 +16,6 @@ FROM base as prod
 RUN mkdir /home/sim2real/workspace
 ADD --chown=sim2real src /home/sim2real/workspace/src
 ADD --chown=sim2real build.sh /home/sim2real/workspace/
-RUN /home/sim2real/workspace/build.sh
+RUN BUILD_RELEASE=true /home/sim2real/workspace/build.sh
 ADD client_start.sh /
 CMD /client_start.sh
