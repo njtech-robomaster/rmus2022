@@ -1,0 +1,64 @@
+#FileName: costmap_common_params.yaml
+ 
+#Author: Fang
+ 
+#History:
+# 20190417: Initial this file.
+
+footprint: [[-0.45,-0.32],[-0.45,0.32],[0.45,0.32],[0.45,-0.32]]
+
+#footprint: [[0,-0.35],[0,0.35],[-0.7,0.35],[-0.7,-0.35]]
+obstacle_layer: 
+  enabled: true
+  combination_method: 1
+  track_unknown_space: true
+  obstacle_range: 2.5
+  raytrace_range: 3.5
+  observation_sources: velodyne
+  velodyne: {
+ sensor_frame: velodyne,
+ data_type: PointCloud2, 
+ topic: scan_matched_points2, # scan_matched_points2  velodyne_points
+ marking: true, 
+ clearing: true, 
+ min_obstacle_height: 0.0,
+ max_obstacle_height: 2.0,
+# inf_is_valid: true,
+  }
+ 
+inflation_layer: 
+  enabled: true
+  cost_scaling_factor: 2.58
+  inflation_radius: 0.55
+ 
+static_layer: 
+  enabled: true
+#Description:
+# 代价地图通用参数配置文件,就是全局代价地图和局部代价地图
+# 共同都需要配置的参数,各参数意义如下:
+# robot_radius：设置机器人的半径，单位是米。由于在stdr中机器人是圆形的，所以可以直接设置该参数。如果你的机器人不是圆形的那就需要使用footprint这个参数，该参数是一个列表，其中的每一个坐标代表机器人上的一点，设置机器人的中心为[0,0]，根据机器人不同的形状，找到机器人各凸出的坐标点即可，具体可参考下图来设置：
+#图在~/Picture中
+ 
+# obstacle_layer:配置障碍物图层
+# enabled:是否启用该层
+# combination_method:只能设置为0或1，用来更新地图上的代价值，一般设置为1;
+# track_unknown_space:如果设置为false，那么地图上代价值就只分为致命碰撞和自由区域两种，如果设置为true，那么就分为致命碰撞，自由区域和未知区域三种。意思是说假如该参数设置为false的话，就意味着地图上的未知区域也会被认为是可以自由移动的区域，这样在进行全局路径规划时，可以把一些未探索的未知区域也来参与到路径规划，如果你需要这样的话就将该参数设置为false。不过一般情况未探索的区域不应该当作可以自由移动的区域，因此一般将该参数设置为true;
+# obstacle_range:设置机器人检测障碍物的最大范围，意思是说超过该范围的障碍物，并不进行检测，只有靠近到该范围内才把该障碍物当作影响路径规划和移动的障碍物;
+# raytrace_range:在机器人移动过程中，实时清除代价地图上的障碍物的最大范围，更新可自由移动的空间数据。假如设置该值为3米，那么就意味着在3米内的障碍物，本来开始时是有的，但是本次检测却没有了，那么就需要在代价地图上来更新，将旧障碍物的空间标记为可以自由移动的空间。
+# observation_sources:设置导航中所使用的传感器，这里可以用逗号形式来区分开很多个传感器，例如激光雷达，碰撞传感器，超声波传感器等，我们这里只设置了激光雷达;
+# laser_scan_sensor:添加的激光雷达传感器
+# sensor_frame:激光雷达传感器的坐标系名称;
+# data_type:激光雷达数据类型;
+# topic:该激光雷达发布的话题名;
+# marking:是否可以使用该传感器来标记障碍物;
+# clearing:是否可以使用该传感器来清除障碍物标记为自由空间;
+
+# inflation_layer:膨胀层，用于在障碍物外标记一层危险区域，在路径规划时需要避开该危险区域
+# enabled:是否启用该层;
+# cost_scaling_factor:膨胀过程中应用到代价值的比例因子，代价地图中到实际障碍物距离在内切圆半径到膨胀半径之间的所有cell可以使用如下公式来计算膨胀代价：exp(-1.0 * cost_scaling_factor * (distance_from_obstacle – inscribed_radius)) * (costmap_2d::INSCRIBED_INFLATED_OBSTACLE – 1),公式中costmap_2d::INSCRIBED_INFLATED_OBSTACLE目前指定为254，注意： 由于在公式中cost_scaling_factor被乘了一个负数，所以增大比例因子反而会降低代价
+# inflation_radius:膨胀半径，膨胀层会把障碍物代价膨胀直到该半径为止，一般将该值设置为机器人底盘的直径大小。
+
+# Static_layer:静态地图层，即SLAM中构建的地图层
+# enabled:是否启用该地图层;
+ 
+

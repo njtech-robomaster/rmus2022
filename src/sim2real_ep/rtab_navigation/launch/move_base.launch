@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+
+
+  <!-- 运行move_base节点  -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
+    
+    <!--move_base参数配置http://wiki.ros.org/move_base -->
+    <param name="base_global_planner" value="global_planner/GlobalPlanner" /><!-- 选择全局规划器类型 -->
+    <rosparam file="$(find rtab_navigation)/config/base_global_planner_params.yaml" command="load" />
+    <!--<param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" /> 选择本地规划器类型 -->
+    <!-- dwa_local_planner参数配置http://wiki.ros.org/dwa_local_planner 
+    <rosparam file="$(find gazebo_nav)/config/dwa_local_planner_params.yaml" command="load" />-->
+    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+    <rosparam file="$(find rtab_navigation)/config/teb_local_planner_params.yaml" command="load" /><!-- race_navigation)/config/teb/ -->
+
+    <rosparam file="$(find rtab_navigation)/config/move_base_params.yaml" command="load" /><!-- 其它参数 -->
+
+    <!-- 全局代价地图和局部代价地图参数配置http://wiki.ros.org/costmap_2d -->
+    <rosparam file="$(find rtab_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find rtab_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find rtab_navigation)/config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find rtab_navigation)/config/global_costmap_params.yaml" command="load" />
+    
+  </node>
+  
+
+
+
+</launch>

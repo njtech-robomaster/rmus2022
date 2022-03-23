@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  sim2real_client_dev:
+    build:
+      context: .
+      target: dev
+    image: njtech-rmus2022-client-dev
+    network_mode: host
+    environment:
+      - DISPLAY
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [ gpu ]
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - .:/home/sim2real/workspace:cached
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    command: /bin/sh -c "while sleep 1000; do :; done"

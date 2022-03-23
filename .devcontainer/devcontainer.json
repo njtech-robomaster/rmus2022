@@ -1,0 +1,13 @@
+{
+	"name": "RMUS2022",
+	"dockerComposeFile": [
+		"../docker-compose.dev.yaml"
+	],
+	"workspaceFolder": "/home/sim2real/workspace",
+	"service": "sim2real_client_dev",
+	"runServices": [
+		"sim2real_client_dev"
+	],
+	"settings": {},
+	"extensions": []
+}

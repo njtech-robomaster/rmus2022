@@ -1,0 +1,45 @@
+#这个文件主要用于配置基本的参数，这些参数会被用于local_costmap和global_costmap http://wiki.ros.org/navigation/Tutorials/RobotSetup
+
+#定义了将要向costmap传递信息的传感器列表，设定导航包所使用的传感器发布的话题,同时作为以下的命名空间
+#observation_sources: camera_scan
+#topic表示传感器发布的话题名称，而marking和clearing参数用来表示是否需要使用传感器的实时信息来添加或清除代价地图中的障碍物信息
+#camera_scan: {data_type: LaserScan, topic: /scan, marking: true, clearing: true, inf_is_valid: true}
+
+#将障碍物插入代价地图的最大范围/米，检测到一个距离小于2.5m的障碍物，就会将这个障碍物引入到代价地图中
+#obstacle_range: 2.5
+
+#从地图中扫描出障碍物的最大范围/米，实时观察3m范围内代价地图中的障碍物
+#raytrace_range: 3.0
+
+#代价比例系数，越大则代价值越小
+#cost_scaling_factor: 10.0
+
+#将机器人的几何参数告诉导航功能包集，footprint表示多边形面积，robot_radius表示圆形
+#footprint: [[0.145, 0.145], [0.145, -0.145], [-0.145, -0.145], [-0.145, 0.145]] 
+footprint: [[-0.145, -0.145], [-0.145, 0.145], [0.145, 0.145], [0.145, -0.145]] 
+#robot_radius: 0.175
+
+obstacle_layer: 
+  enabled: true
+  combination_method: 1
+  track_unknown_space: true
+  obstacle_range: 2.5
+  raytrace_range: 3.5
+  min_obstacle_height: -0.5
+  observation_sources: camera_scan
+  pamera_scan: {sensor_frame: laser_link, data_type: LaserScan, topic: /rplidar/scan, marking: true, clearing: true, inf_is_valid: true}
+#膨胀半径，扩展在碰撞区域以外的代价区域，给定机器人与障碍物之间必须要保持的最小距离
+inflation_layer: 
+  enabled: true
+  cost_scaling_factor: 2.58
+  inflation_radius: 0.7
+#代价地图精度，即每个网格的尺寸
+static_layer: 
+  enabled: true
+  
+resolution: 0.05
+
+map_type: costmap
+
+
+

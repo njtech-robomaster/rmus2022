@@ -1,0 +1,45 @@
+version: "3.9"
+services:
+
+  sim2real_server:
+    image: rmus2022/server:v1.2.0
+    command: /server_launch.sh
+    network_mode: host
+    user: sim2real
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [ gpu ]
+    environment:
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./server_launch.sh:/server_launch.sh:ro
+      - ./server_healthcheck.sh:/server_healthcheck.sh:ro
+    healthcheck:
+      test: [ "CMD", "/server_healthcheck.sh" ]
+      interval: 3s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+
+  sim2real_client:
+    build:
+      context: .
+      target: prod
+    image: njtech-rmus2022-client
+    network_mode: host
+    environment:
+      - DISPLAY
+    deploy:
+      resources:
+        limits:
+          cpus: '4.48'
+          memory: 8192M
+        reservations:
+          devices:
+            - capabilities: [ gpu ]
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix

@@ -1,0 +1,36 @@
+#FileName: local_costmap_params.yaml
+ 
+#Author: Fang
+ 
+#History:
+# 20190417: Initial this file.
+local_costmap:
+  global_frame: map
+  robot_base_frame: base_link
+  update_frequency: 5
+  publish_frequency: 2.0
+  static_map: false
+  rolling_window: true
+  width: 5.0
+  height: 5.0
+  resolution: 0.05
+  transform_tolerance: 0.2
+  plugins:
+    - {name: obstacle_layer,  type: "costmap_2d::ObstacleLayer"}
+    - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+     
+#Description:
+#  本地代价地图需要配置的参数，各参数意义如下:
+#    global_frame:在局部代价地图中的全局坐标系，一般需要设置为odom_frame，但是由于stdr没有这个坐标系，我就拿/map_static来代替了;
+#    robot_base_frame:机器人本体的基坐标系;
+#    update_frequency:局部代价地图的更新频率;
+#    publish_frequency:局部代价地图的发布频率;
+#    static_map:局部代价地图一般不设置为静态地图，因为需要检测是否在机器人附近有新增的动态障碍物;
+#    rolling_window:使用滚动窗口，始终保持机器人在当前局部地图的中心位置;
+#    width:滚动窗口的宽度，单位是米;
+#    height:滚动窗口的高度，单位是米;
+#resolution:地图的分辨率，该分辨率可以从加载的地图相对应的配置文件中获取到;
+#    transform_tolerance:局部代价地图中的坐标系之间转换的最大可忍受延时;
+#    plugins:在局部代价地图中，不需要静态地图层，因为我们使用滚动窗口来不断的扫描障碍物，所以就需要融合两层地图（inflation_layer和obstacle_layer）即可，融合后的地图用于进行局部路径规划;
+ 
+
