@@ -1,0 +1,15 @@
+<package format="2">
+    <name>apriltag_msgs</name>
+    <version>0.0.0</version>
+    <description>AprilTag messages</description>
+    <maintainer email="yushijinhun@gmail.com">Haowei Wen</maintainer>
+    <license>GPLv3</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <depend>std_msgs</depend>
+    <depend>geometry_msgs</depend>
+
+    <exec_depend>message_runtime</exec_depend>
+
+</package>
