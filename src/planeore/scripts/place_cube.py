@@ -4,7 +4,7 @@
 import rospy
 import numpy as np
 
-from std_msgs.msg import String
+from std_msgs.msg import String,Bool
 from geometry_msgs.msg import Pose, Twist, Point
 from apriltag_msgs.msg import ApriltagMarkerArray
 
@@ -49,6 +49,7 @@ class graspAruco:
         self.base_move_position_pub = rospy.Publisher("cmd_position", Twist)
         self.base_move_vel_pub = rospy.Publisher("cmd_vel", Twist)
         self.arm_gripper_pub = rospy.Publisher("arm_gripper", Point)
+        self.plane_success_pub = rospy.Publisher("plane_success", Bool)
         self.arm_position_pub = rospy.Publisher("arm_position", Pose)
         self.sinknum_sub = rospy.Subscriber(
             '/sinknum', String, self.sinknumCallback, queue_size=1)
@@ -356,12 +357,13 @@ class graspAruco:
             self.close_gripper()
             self.forward_zero()
             rospy.sleep(1)
-            rospy.loginfo("===== finish ====")
+            print("===== finish ====")
 
             self.place_success = True
+            self.plane_success_pub.publish(True)
             rospy.sleep(5)
             self.place_success = False
-
+            self.plane_success_pub.publish(False)
         else:
             # self.move_base_x(tvec)
             # self.move_base_velocity()

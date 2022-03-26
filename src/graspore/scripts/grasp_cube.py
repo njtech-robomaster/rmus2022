@@ -344,6 +344,7 @@ class graspAruco:
             self.success_pub.publish(True)
             rospy.sleep(5)
             self.grasp_success = False
+            self.success_pub.publish(False)
 
         else:
             self.grasp_success = False
