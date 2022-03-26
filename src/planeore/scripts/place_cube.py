@@ -62,7 +62,8 @@ class graspAruco:
         self.sinknum = 5
 
     def sinknumCallback(self, data):
-        self.sinknum = data.sinknum
+        print("------->Received ", data.sinknum)
+        self.sinknum = int(data.sinknum)
 
     def statecallback(self, state):
         if state.data:
