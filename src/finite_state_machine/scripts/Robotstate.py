@@ -104,11 +104,11 @@ class Robotstates(Robot):
 
 
         if self.findoreCount==0:
-            self.sinkNum(5)
+            self.sinkNum.publish(5)
         elif self.findoreCount==1:
-            self.sinkNum(6)
+            self.sinkNum.publish(6)
         elif self.findoreCount==2:
-            self.sinkNum(7)
+            self.sinkNum.publish(7)
 
         if self.findoreCount > len(self.aruco):
             rospy.logwarn("The number of ore searches exceeded the number of ore information obtained, Robot will return!")
