@@ -12,6 +12,7 @@ Panels:
         - /Local Costmap1/Planner1
         - /Submaps1/Submaps1
         - /ScanMatchedPoints1
+        - /PoseArray1
       Splitter Ratio: 0.5
     Tree Height: 613
   - Class: rviz/Selection
@@ -379,6 +380,23 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Alpha: 1
+      Arrow Length: 0.30000001192092896
+      Axes Length: 0.30000001192092896
+      Axes Radius: 0.009999999776482582
+      Class: rviz/PoseArray
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.07000000029802322
+      Head Radius: 0.029999999329447746
+      Name: PoseArray
+      Queue Size: 10
+      Shaft Length: 0.23000000417232513
+      Shaft Radius: 0.009999999776482582
+      Shape: Axes
+      Topic: /markers/pose_array
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -406,7 +424,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 6.303989410400391
+      Distance: 7.646843433380127
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -422,9 +440,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5597971081733704
+      Pitch: 1.094797134399414
       Target Frame: <Fixed Frame>
-      Yaw: 3.1650006771087646
+      Yaw: 3.220001459121704
     Saved: ~
 Window Geometry:
   Displays:
