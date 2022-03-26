@@ -52,7 +52,7 @@ class graspAruco:
         self.plane_success_pub = rospy.Publisher("plane_success", Bool)
         self.arm_position_pub = rospy.Publisher("arm_position", Pose)
         self.sinknum_sub = rospy.Subscriber(
-            '/sinknum', String, self.sinknumCallback, queue_size=1)
+            'sinknum', String, self.sinknumCallback, queue_size=1)
         self.image_sub = rospy.Subscriber(
             "/markers", ApriltagMarkerArray, self.sinkCallback, queue_size=1)
         self.state = rospy.Subscriber(
@@ -313,7 +313,8 @@ class graspAruco:
         for x in data:
             if x.id == self.sinknum:
                 data = x
-                rospy.loginfo("Find "+str(x.id))
+                print("-----Find "+str(x.id)+"-----")
+                print("-----sinkNum "+str(self.sinknum)+"-----")
                 break
         else:
             return
