@@ -78,7 +78,7 @@ class Robotstates(Robot):
 
 
         rospy.loginfo("Move to the second location...")
-        self.move(-0.002, 1.143, -0.080, -0.002, 1.143, -0.080)
+        self.move(-0.002, 1.143, -0.080, 0.000, 0.000, 0.167, 0.986)
         while eventlet.Timeout(5, False):
             if self.isGetNum and self.arucoNum == 3:
                 self.toFindingOre()
