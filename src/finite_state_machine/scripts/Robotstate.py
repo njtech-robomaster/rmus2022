@@ -103,6 +103,13 @@ class Robotstates(Robot):
         rospy.loginfo("State : FindingOre")
 
 
+        if self.findoreCount==0:
+            self.sinkNum(5)
+        elif self.findoreCount==1:
+            self.sinkNum(6)
+        elif self.findoreCount==2:
+            self.sinkNum(7)
+
         if self.findoreCount > len(self.aruco):
             rospy.logwarn("The number of ore searches exceeded the number of ore information obtained, Robot will return!")
             self.toBack()
@@ -163,8 +170,9 @@ class Robotstates(Robot):
         while not rospy.is_shutdown():
             self.statePub.publish("PlaneOre")
             self.Rate.sleep()
+            print("Planing..")
             if self.isPlane:
-                rospy.loginfo("To Next Ore")
+                print("To Next Ore")
                 if self.isFinish:
                     rospy.loginfo("Ore Finished")
                     break
