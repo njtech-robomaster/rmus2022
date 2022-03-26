@@ -22,13 +22,16 @@
   <!-- rqt_reconfigure -->
   <node if="$(arg open_reconfigure)" name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" />
 
-  <!-- Map server -->
-  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
-
   <!-- Cartographer localization -->
   <include file="$(find carto_navigation)/launch/cartographer_localization.launch" />
   
   <!-- move_base -->
   <include file="$(find carto_navigation)/launch/move_base.launch"/>
+
+	<node name="map_server" pkg="map_server" type="map_server" args="$(find carto_navigation)/maps/latest/map_nav.yaml" output="screen">
+    <remap from="map" to="map_nav" />
+  </node>
+
+  <include file="$(find carto_navigation)/launch/rgbd_to_pointcloud.launch" />
 
 </launch>
