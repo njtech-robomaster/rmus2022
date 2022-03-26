@@ -72,7 +72,6 @@ class Robotstates(Robot):
         rospy.loginfo("Move to the first location...")
         self.move(0.335, 0.463, -0.080, 0.000, 0.000, 0.320, 0.947)
         while eventlet.Timeout(5, False):
-            rospy.loginfo(self.aruco)
             if self.isGetNum and self.arucoNum == 3:
                 self.toFindingOre()
                 break
@@ -81,7 +80,6 @@ class Robotstates(Robot):
         rospy.loginfo("Move to the second location...")
         self.move(-0.002, 1.143, -0.080, -0.002, 1.143, -0.080)
         while eventlet.Timeout(5, False):
-            rospy.loginfo(self.aruco)
             if self.isGetNum and self.arucoNum == 3:
                 self.toFindingOre()
                 break
@@ -90,7 +88,6 @@ class Robotstates(Robot):
         rospy.loginfo("Move to the third location...")
         self.move(0.654, 3.199, -0.080, 0.000, 0.000, -0.443, 0.896)
         while eventlet.Timeout(5, False):
-            rospy.loginfo(self.aruco)
             if self.isGetNum and self.arucoNum == 3:
                 self.toFindingOre()
                 break
