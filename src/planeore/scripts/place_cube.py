@@ -66,7 +66,7 @@ class graspAruco:
         self.sinknum = int(data.sinknum)
 
     def statecallback(self, state):
-        if state.data:
+        if state.data=="PlaneOre":
             self.onPlane = True
         else:
             self.onPlane = False
