@@ -70,7 +70,7 @@ class Robotstates(Robot):
 
         
         rospy.loginfo("Move to the first location...")
-        self.move(0.250, 1.541, 0.000, 0.000, 0.068, 0.998)
+        self.move(0.335, 0.463, -0.080, 0.000, 0.000, 0.320, 0.947)
         while eventlet.Timeout(5, False):
             if self.isGetNum and self.arucoNum == 3:
                 self.toFindingOre()
@@ -78,7 +78,7 @@ class Robotstates(Robot):
 
 
         rospy.loginfo("Move to the second location...")
-        self.move(0.250, 1.541, 0.000, 0.000, 0.068, 0.998)
+        self.move(-0.002, 1.143, -0.080, -0.002, 1.143, -0.080)
         while eventlet.Timeout(5, False):
             if self.isGetNum and self.arucoNum == 3:
                 self.toFindingOre()
@@ -86,7 +86,7 @@ class Robotstates(Robot):
 
 
         rospy.loginfo("Move to the third location...")
-        self.move(0.250, 1.541, 0.000, 0.000, 0.068, 0.998)
+        self.move(0.654, 3.199, -0.080, 0.000, 0.000, -0.443, 0.896)
         while eventlet.Timeout(5, False):
             if self.isGetNum and self.arucoNum == 3:
                 self.toFindingOre()
@@ -109,27 +109,27 @@ class Robotstates(Robot):
 
         if self.aruco[self.findoreCount] == 1:
             rospy.loginfo("Move to No. 1 Mine")
-            self.move()
+            self.move(0.107, 2.665, -0.080, 0.000, 0.000, 0.712, 0.702)
             self.findoreCount+=1
             self.toCatchOre()
         elif self.aruco[self.findoreCount] == 2:
             rospy.loginfo("Move to No. 2 Mine")
-            self.move()
+            self.move(0.102, 2.694, -0.080, 0.000, 0.000, -0.495, 0.869)
             self.findoreCount+=1
             self.toCatchOre()
         elif self.aruco[self.findoreCount] == 3:
             rospy.loginfo("Move to No. 3 Mine")
-            self.move()
+            self.move(1.887, 2.747, -0.080, 0.000, 0.000, -0.057, 0.998)
             self.findoreCount+=1
             self.toCatchOre()
         elif self.aruco[self.findoreCount] == 4:
             rospy.loginfo("Move to No. 4 Mine")
-            self.move()
+            self.move(2.207, 0.309, -0.080, 0.000, 0.000, 0.999, -0.052)
             self.findoreCount+=1
             self.toCatchOre()
         elif self.aruco[self.findoreCount] == 5:
             rospy.loginfo("Move to No. 5 Mine")
-            self.move()
+            self.move(2.720, -0.753, -0.080, 0.000, 0.000, -0.169, 0.986)
             self.findoreCount+=1
             self.toCatchOre()
         elif self.aruco[self.findoreCount] == 0:
@@ -154,7 +154,7 @@ class Robotstates(Robot):
         rospy.loginfo("State : TransportingOre")
 
         rospy.loginfo("Move to exchange station")
-        self.move()
+        self.move(0.925, 1.736, -0.080, 0.000, 0.000, -0.016, 1.000)
         self.toPlaneOre()
 
     def PlaneOre(self):
