@@ -18,6 +18,7 @@ class Robot(object):
             'plane_success', Bool, self.planeCallback)
         self.observe = rospy.Subscriber(
             '/markers', ApriltagMarkerArray, self.ObserveCallback)
+        self.sinkNum = rospy.Publisher('sinkNum', int)
 
         self.isCatch = False
         self.isPlane = False
