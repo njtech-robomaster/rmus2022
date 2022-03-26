@@ -4,7 +4,7 @@ from re import X
 import rospy
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-from std_msgs.msg import String, Bool
+from std_msgs.msg import String, Bool,Int8
 from apriltag_msgs.msg import ApriltagMarkerArray
 
 
@@ -18,7 +18,7 @@ class Robot(object):
             'plane_success', Bool, self.planeCallback)
         self.observe = rospy.Subscriber(
             '/markers', ApriltagMarkerArray, self.ObserveCallback)
-        self.sinkNum = rospy.Publisher('sinkNum', int)
+        self.sinkNum = rospy.Publisher('sinkNum', Int8)
 
         self.isCatch = False
         self.isPlane = False
@@ -78,6 +78,7 @@ class Robot(object):
             self.isPlane = False
 
     def ObserveCallback(self, data):
+        data = data.markers
         if not self.onObserve:
             return
         if len(data) == 1:
@@ -87,7 +88,7 @@ class Robot(object):
         self.arucoNum = 0
         self.isGetNum = False
 
-        data = data.markers
+        
         arucoGet = []
         for x in data:
             if x.id in [0, 1, 2, 3, 4]:
