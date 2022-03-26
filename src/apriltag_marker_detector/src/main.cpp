@@ -47,11 +47,14 @@ void process_frame(const sensor_msgs::ImageConstPtr &image_msg,
   cv::Mat image = cv_image->image;
   cv::Mat hsv;
   cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
+  cv::Mat nonred;
+  cv::inRange(hsv, cv::Scalar(6, 0, 0), cv::Scalar(176, 255, 255), nonred);
 
   cv::Mat split[3];
   cv::split(hsv, split);
   cv::Mat grayscale;
   grayscale = split[1];
+  grayscale.setTo(0, nonred);
   cv::bitwise_not(grayscale, grayscale);
 
   cv::imshow(window_detection_name, grayscale);
