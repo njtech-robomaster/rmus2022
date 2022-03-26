@@ -208,7 +208,7 @@ class graspAruco:
         vel_cmd.angular.y = 0.0
         vel_cmd.angular.z = 0.0
         self.base_move_vel_pub.publish(vel_cmd)
-        rospy.sleep(0.02)
+        rospy.sleep(0.03)
         # motor STOP
         vel_cmd.linear.x = 0.0
         vel_cmd.linear.y = 0.0
@@ -227,7 +227,7 @@ class graspAruco:
         vel_cmd.angular.y = 0.0
         vel_cmd.angular.z = 0.0
         self.base_move_vel_pub.publish(vel_cmd)
-        rospy.sleep(0.02)
+        rospy.sleep(0.03)
         # motor STOP
         vel_cmd.linear.x = 0.0
         vel_cmd.linear.y = 0.0

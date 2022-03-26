@@ -161,7 +161,7 @@ class Robotstates(Robot):
         rospy.loginfo("State : TransportingOre")
 
         rospy.loginfo("Move to exchange station")
-        self.move(0.600, 1.612, -0.080, 0.000, 0.000, 0.000, 1.000)
+        self.move(0.560, 1.612, -0.080, 0.000, 0.000, 0.008, 1.000)
         self.toPlaneOre()
 
     def PlaneOre(self):
