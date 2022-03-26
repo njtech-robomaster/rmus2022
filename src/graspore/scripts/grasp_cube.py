@@ -46,7 +46,7 @@ class graspAruco:
         self.arm_gripper_pub.publish(close_gripper_msg)
 
     def move_arm(self, t_vector):
-        rospy.loginfo("move_arm", t_vector)
+        rospy.loginfo("move_arm" + str(t_vector))
         move_arm_msg = Pose()
         # unit in [cm]
         # in the gripper base frame
@@ -320,8 +320,8 @@ class graspAruco:
             move_y_right = True
         else:
             move_y_right = False  # move to left
-        rospy.loginfo("distance in x", distance_in_x)
-        rospy.loginfo("distance in y", distance_in_y)
+        rospy.loginfo("distance in x" + str(distance_in_x))
+        rospy.loginfo("distance in y" + str(distance_in_y))
         # rospy.loginfo("move y to right", move_y_right)
 
         if (distance_in_x <= gama_x) and (distance_in_y <= gama_y):

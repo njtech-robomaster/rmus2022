@@ -39,8 +39,8 @@ def get_wp_from_pose(aruco_pose_msg):
     pos_wp = np.matmul(pos_, rot_)
     pos_wp += pos_marker
     wp_ = pos_wp[:3]
-    rospy.loginfo("marker : ", pos_marker)
-    rospy.loginfo("waypoint : ", wp_)
+    rospy.loginfo("marker : " + str(pos_marker))
+    rospy.loginfo("waypoint : " + str(wp_))
     return wp_
 
 
@@ -86,7 +86,6 @@ class graspAruco:
         self.arm_gripper_pub.publish(close_gripper_msg)
 
     def move_arm(self, t_vector):
-        rospy.loginfo("move_arm", t_vector)
         move_arm_msg = Pose()
         # unit in [cm]
         # in the gripper base frame
@@ -101,7 +100,6 @@ class graspAruco:
         self.arm_position_pub.publish(move_arm_msg)
 
     def move_arm0(self, t_vector):
-        rospy.loginfo("move_arm", t_vector)
         move_arm_msg = Pose()
         # unit in [cm]
         # in the gripper base frame
@@ -337,8 +335,8 @@ class graspAruco:
             move_y_right = True
         else:
             move_y_right = False  # move to left
-        rospy.loginfo("distance in x", distance_in_x)
-        rospy.loginfo("distance in y", distance_in_y)
+        print("distance in x", distance_in_x)
+        print("distance in y", distance_in_y)
 
         if (distance_in_x <= gama_x) and (distance_in_y <= gama_y):
             # step forward
