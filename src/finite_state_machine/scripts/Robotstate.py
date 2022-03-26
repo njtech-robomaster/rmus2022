@@ -78,7 +78,7 @@ class Robotstates(Robot):
 
 
         rospy.loginfo("Move to the second location...")
-        self.move(-0.002, 1.143, -0.080, -0.002, 1.143, -0.080)
+        self.move(-0.002, 1.143, -0.080, 0.000, 0.000, 0.167, 0.986)
         while eventlet.Timeout(5, False):
             if self.isGetNum and self.arucoNum == 3:
                 self.toFindingOre()
@@ -100,15 +100,15 @@ class Robotstates(Robot):
 
     def FindingOre(self):
         self.statePub.publish("FindingOre")
-        rospy.loginfo("State : FindingOre")
+        rospy.loginfo("State : FindingOre " + str(self.findoreCount))
 
 
         if self.findoreCount==0:
-            self.sinkNum(5)
+            self.sinkNum.publish("7")
         elif self.findoreCount==1:
-            self.sinkNum(6)
+            self.sinkNum.publish("6")
         elif self.findoreCount==2:
-            self.sinkNum(7)
+            self.sinkNum.publish("5")
 
         if self.findoreCount > len(self.aruco):
             rospy.logwarn("The number of ore searches exceeded the number of ore information obtained, Robot will return!")
@@ -161,7 +161,7 @@ class Robotstates(Robot):
         rospy.loginfo("State : TransportingOre")
 
         rospy.loginfo("Move to exchange station")
-        self.move(0.925, 1.736, -0.080, 0.000, 0.000, -0.016, 1.000)
+        self.move(0.600, 1.612, -0.080, 0.000, 0.000, 0.000, 1.000)
         self.toPlaneOre()
 
     def PlaneOre(self):

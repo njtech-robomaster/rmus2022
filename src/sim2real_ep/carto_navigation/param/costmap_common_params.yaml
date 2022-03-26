@@ -19,7 +19,7 @@ static:
   track_unknown_space: true
 
 obstacles_laser:
-  observation_sources: "laser_scan_sensor rgbd_camera"
+  observation_sources: "laser_scan_sensor"
   laser_scan_sensor:
     data_type: LaserScan
     topic: /rplidar/scan
