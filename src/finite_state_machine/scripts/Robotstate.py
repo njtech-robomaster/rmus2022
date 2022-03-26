@@ -46,8 +46,6 @@ class Robotstates(Robot):
     def __init__(self) -> None:
         super(Robotstates, self).__init__()
 
-        rospy.init_node('State_machine', anonymous=True)
-
         self.machine = transitions.Machine(
             model=self, states=Robotstates.statesList, transitions=Robotstates.transitionsList, initial='init')
         
@@ -177,5 +175,6 @@ class Robotstates(Robot):
         self.move(0,0,0,0,0,0)
 
 if __name__ == '__main__':
+    rospy.init_node('State_machine', anonymous=True)
     m = Robotstates()
     m.init()

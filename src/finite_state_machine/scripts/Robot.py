@@ -1,7 +1,6 @@
 
 from __future__ import print_function
 from re import X
-from typing_extensions import Self
 import rospy
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal

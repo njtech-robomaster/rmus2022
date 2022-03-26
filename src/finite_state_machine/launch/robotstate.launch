@@ -1,5 +1,5 @@
 <launch>
-    <node pkg="finite_state_machine" type="Robostate.py" name="robotstate"></node>
+    <node pkg="finite_state_machine" type="Robotstate.py" name="robotstate"></node>
     <node pkg="graspore" type="grasp_cube.py" name="grasp_aruco_node"></node>
-    <node pkg="planeore" type="plane_cube.py" name="plane_aruco_node"></node>
+    <node pkg="planeore" type="place_cube.py" name="plane_aruco_node"></node>
 </launch>

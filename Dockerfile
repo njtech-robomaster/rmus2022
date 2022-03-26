@@ -2,7 +2,7 @@
 
 FROM rmus2022/client:v1.2.0 as base
 RUN apt-get update
-RUN apt-get install -y jq
+RUN apt-get install -y jq graphviz graphviz-dev python3-transitions python3-eventlet python3-graphviz
 RUN usermod -s /bin/bash sim2real
 USER sim2real
 ENV QT_X11_NO_MITSHM=1
