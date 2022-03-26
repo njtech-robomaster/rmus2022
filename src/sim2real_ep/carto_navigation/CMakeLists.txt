@@ -24,7 +24,7 @@ include_directories(
 
 install(
   DIRECTORY
-    launch
+    launch maps param rviz
   DESTINATION
     ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
