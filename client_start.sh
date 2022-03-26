@@ -16,4 +16,4 @@ while true; do
 done
 echo "/cmd_vel topic is now subscribed" >&2
 
-roslaunch --wait rtab_navigation rtab_navigation.launch
+roslaunch --wait carto_navigation overall.launch
