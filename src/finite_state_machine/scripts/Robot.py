@@ -56,8 +56,8 @@ class Robot(object):
         else:
             return client.get_result()
 
-    def move(self, **args):
-        result = self.movebase(**args)
+    def move(self, x,y,z,tx,ty,tz,tw):
+        result = self.movebase(x,y,z,tx,ty,tz,tw)
         try:
             while not result:
                 pass
