@@ -1,0 +1,17 @@
+<package format="2">
+    <name>apriltag_marker_detector</name>
+    <version>0.0.0</version>
+    <description>AprilTag Detector</description>
+    <maintainer email="yushijinhun@gmail.com">Haowei Wen</maintainer>
+    <license>GPLv3</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <depend>roscpp</depend>
+    <depend>sensor_msgs</depend>
+    <depend>tf2_eigen</depend>
+    <depend>cv_bridge</depend>
+    <depend>apriltag_msgs</depend>
+    <depend>image_transport</depend>
+
+</package>
