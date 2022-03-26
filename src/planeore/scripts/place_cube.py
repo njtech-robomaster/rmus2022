@@ -59,11 +59,11 @@ class graspAruco:
             "state", String, self.statecallback)
         self.place_success = False
         self.onPlane = False
-        self.sinknum = 5
+        self.sinknum = -1
 
     def sinknumCallback(self, data):
-        print("------->Received ", data.sinknum)
-        self.sinknum = int(data.sinknum)
+        print("------->Received ", data.data)
+        self.sinknum = int(data.data)
 
     def statecallback(self, state):
         if state.data=="PlaneOre":
@@ -208,7 +208,7 @@ class graspAruco:
         vel_cmd.angular.y = 0.0
         vel_cmd.angular.z = 0.0
         self.base_move_vel_pub.publish(vel_cmd)
-        rospy.sleep(0.05)
+        rospy.sleep(0.02)
         # motor STOP
         vel_cmd.linear.x = 0.0
         vel_cmd.linear.y = 0.0
@@ -227,7 +227,7 @@ class graspAruco:
         vel_cmd.angular.y = 0.0
         vel_cmd.angular.z = 0.0
         self.base_move_vel_pub.publish(vel_cmd)
-        rospy.sleep(0.05)
+        rospy.sleep(0.02)
         # motor STOP
         vel_cmd.linear.x = 0.0
         vel_cmd.linear.y = 0.0
