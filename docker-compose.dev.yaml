@@ -6,6 +6,7 @@ services:
       target: dev
     image: njtech-rmus2022-client-dev
     network_mode: host
+    privileged: true
     environment:
       - DISPLAY
     deploy:
@@ -16,6 +17,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - .:/home/sim2real/workspace:cached
+      - /dev:/dev
     cap_add:
       - SYS_PTRACE
     security_opt:
