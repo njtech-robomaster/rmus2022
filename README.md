@@ -21,8 +21,8 @@
 
 ## Build & run code in dev container
 1. Start a new terminal in VSCode
-2. Run `./build.sh` to build
-3. Run `setup_ws` to configure the catkin workspace
+2. Run `build` to build
+3. Run `setup` to configure the catkin workspace
 4. Run whatever you like
 
 # Build & Run

@@ -1,9 +1,0 @@
-[submodule "src/cartographer"]
-	path = src/cartographer
-	url = https://github.com/cartographer-project/cartographer.git
-[submodule "src/cartographer_ros"]
-	path = src/cartographer_ros
-	url = https://github.com/cartographer-project/cartographer_ros.git
-[submodule "src/ddynamic_reconfigure"]
-	path = src/ddynamic_reconfigure
-	url = https://github.com/pal-robotics/ddynamic_reconfigure.git

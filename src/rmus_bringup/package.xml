@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rmus_bringup</name>
+  <version>0.0.0</version>
+  <description>The rmus_bringup package</description>
+  <maintainer email="sim2real@todo.todo">sim2real</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>

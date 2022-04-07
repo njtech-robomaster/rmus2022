@@ -1,7 +1,17 @@
-build_isolated/
-devel_isolated/
-install_isolated/
-.catkin_workspace
-build/
+# clangd
 .cache/
+
+# python
 __pycache__/
+
+# catkin
+build/
+devel/
+logs/
+install/
+.catkin_tools/profiles/*/*
+!.catkin_tools/profiles/*/config.yaml
+
+# vscode
+.vscode/*
+!.vscode/extensions.json
