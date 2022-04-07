@@ -10,6 +10,11 @@
 
 # Development
 
+## Clone the repository
+```
+git clone --recurse-submodules git@github.com:njtech-robomaster/rmus2022.git
+```
+
 ## Setup VSCode
 1. Open VSCode
 2. Run 'Remote-Containers: Open Folder in Container...' command
