@@ -34,4 +34,5 @@ ADD --chown=sim2real .catkin_tools /home/sim2real/workspace/.catkin_tools
 ADD --chown=sim2real build.sh /home/sim2real/workspace/
 RUN GENERATE_COMPILE_COMMANDS=false /home/sim2real/workspace/build.sh
 ADD entrypoint.sh /
-ENTRYPOINT /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["roslaunch", "rmus_bringup", "test.launch"]
