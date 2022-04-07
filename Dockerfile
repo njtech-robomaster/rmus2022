@@ -46,4 +46,4 @@ ADD --chown=sim2real build.sh /home/sim2real/workspace/
 RUN GENERATE_COMPILE_COMMANDS=false /home/sim2real/workspace/build.sh
 ADD entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["roslaunch", "rmus_bringup", "test.launch"]
+CMD ["roslaunch", "--wait", "apriltag_marker_detector", "detection_evaluation.launch"]

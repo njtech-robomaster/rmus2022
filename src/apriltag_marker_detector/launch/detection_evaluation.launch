@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <launch>
     <node name="apriltag_marker_detector" pkg="apriltag_marker_detector" type="apriltag_marker_detector" output="screen">
-        <param name="detection_only_mode" value="true" />
         <param name="preview_preprocess" value="true" />
         <param name="preview_results" value="true" />
     </node>
