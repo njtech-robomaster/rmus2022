@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<!--
+
+Usage:
+    roslaunch apriltag_marker_detector detect_bag.launch bagfile:=$(realpath path/to/rosbag)
+
+Required topics in rosbag:
+    /camera/color/image_raw : sensor_msgs/Image
+
+-->
+
+<launch>
+    <arg name="bagfile" />
+
+    <node name="apriltag_marker_detector" pkg="apriltag_marker_detector" type="apriltag_marker_detector" output="screen">
+        <param name="detection_only_mode" value="true" />
+        <param name="preview_preprocess" value="true" />
+        <param name="preview_results" value="true" />
+    </node>
+
+    <node name="player" pkg="rosbag" type="play" output="screen" args="--clock --rate=1.0 $(arg bagfile)" required="true" />
+
+</launch>
