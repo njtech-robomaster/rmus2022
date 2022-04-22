@@ -1,23 +1,21 @@
 
-from __future__ import print_function
-from re import X
 import rospy
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from std_msgs.msg import String, Bool,Int8
-from apriltag_msgs.msg import ApriltagMarkerArray
+# from apriltag_msgs.msg import ApriltagMarkerArray
 
 
 
 class Robot(object):
     def __init__(self):
         self.statePub = rospy.Publisher('state', String, queue_size=10)
-        self.graspls = rospy.Subscriber(
-            'grasp_success', Bool, self.graspCallback)
-        self.planels = rospy.Subscriber(
-            'plane_success', Bool, self.planeCallback)
-        self.observe = rospy.Subscriber(
-            '/markers', ApriltagMarkerArray, self.ObserveCallback)
+        # self.graspls = rospy.Subscriber(
+        #     'grasp_success', Bool, self.graspCallback)
+        # self.planels = rospy.Subscriber(
+        #     'plane_success', Bool, self.planeCallback)
+        # self.observe = rospy.Subscriber(
+        #     '/markers', ApriltagMarkerArray, self.ObserveCallback)
         self.sinkNum=rospy.Publisher('sinknum', String, queue_size=10)
 
 
