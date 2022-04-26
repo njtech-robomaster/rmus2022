@@ -18,5 +18,5 @@ RUN mkdir /home/sim2real/workspace
 ADD --chown=sim2real src /home/sim2real/workspace/src
 ADD --chown=sim2real build.sh /home/sim2real/workspace/
 RUN BUILD_RELEASE=true /home/sim2real/workspace/build.sh
-ADD client_start.sh /
+ADD --chown=sim2real client_start.sh /
 CMD /client_start.sh
