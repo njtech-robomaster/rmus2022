@@ -2,7 +2,7 @@ version: "3.9"
 services:
 
   sim2real_server:
-    image: rmus2022/server:v1.2.0
+    image: rmus2022/server:v1.4.0
     command: /server_launch.sh
     network_mode: host
     user: sim2real
