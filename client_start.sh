@@ -3,6 +3,7 @@
 cd ~/workspace
 
 export ENV_ROBOT_MODE="sim"
+export QT_X11_NO_MITSHM=1
 
 source /opt/ros/noetic/setup.bash
 source install_isolated/setup.bash
