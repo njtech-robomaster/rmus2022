@@ -1,5 +1,5 @@
 <launch>
     <include file="$(find carto_navigation)/launch/navigation.launch"/>
-    <node name="apriltag_marker_detector" pkg="apriltag_marker_detector" type="apriltag_marker_detector" output="screen" />
+    <!--<node name="apriltag_marker_detector" pkg="apriltag_marker_detector" type="apriltag_marker_detector" output="screen" />-->
     <include file="$(find finite_state_machine)/launch/robotstate.launch" />
 </launch>
