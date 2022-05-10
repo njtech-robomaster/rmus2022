@@ -16,7 +16,7 @@ class graspAruco:
             "/markers", ApriltagMarkerArray, self.graspCallback, queue_size=1)
         self.state = rospy.Subscriber('state', String, self.statecallback)
 
-        self.onGrasp = False
+        self.onGrasp = True
         self.grasp_success = False
         self.isOpenGrasp = False
 
@@ -345,6 +345,7 @@ class graspAruco:
             rospy.sleep(5)
             self.grasp_success = False
             self.success_pub.publish(False)
+            self.onGrasp = False
 
         else:
             self.grasp_success = False

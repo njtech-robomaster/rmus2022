@@ -17,4 +17,4 @@ while true; do
 done
 echo "/cmd_vel topic is now subscribed" >&2
 
-roslaunch --wait carto_navigation overall.launch
+roslaunch --wait finite_state_machine robotstate.launch
