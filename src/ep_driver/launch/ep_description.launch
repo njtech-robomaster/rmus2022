@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="robot_mode" default="sim" />
+
+    <group if="$(eval 'sim' in arg('robot_mode'))">
+        <param name="robot_description" command="xacro '$(find ep_driver)/urdf/ep_description_sim.xacro'" />
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    </group>
+
+    <group if="$(eval 'real' in arg('robot_mode'))">
+        <param name="robot_description" command="xacro '$(find ep_driver)/urdf/ep_description.xacro'" />
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    </group>
+
+</launch>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="robot_mode" default="real" />
+    <arg name="robot_mode" default="sim" />
     <arg name="use_laser" default="false" />
     <arg name="use_imu" default="false" />
     <arg name="use_rgbd" default="true" />
