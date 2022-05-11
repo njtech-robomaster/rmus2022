@@ -18,6 +18,14 @@ RUN apt-get update \
        python3-numpy                   \
        python3-opencv                  \
        python3-netaddr                 \
+       ros-noetic-navigation           \
+       ros-noetic-teb-local-planner    \
+       libceres-dev                    \
+       libgflags-dev                   \
+       libgoogle-glog-dev              \
+       liblua5.2-dev                   \
+       python3-sphinx                  \
+       stow                            \
  && wget -O /etc/apt/trusted.gpg.d/llvm.asc 'https://apt.llvm.org/llvm-snapshot.gpg.key' \
  && wget -O /etc/apt/trusted.gpg.d/realsense.asc 'https://keyserver.ubuntu.com/pks/lookup?op=hget&search=490918728cb41b2e9f4478a11f27750d' \
  && echo 'deb https://apt.llvm.org/focal/ llvm-toolchain-focal main' > /etc/apt/sources.list.d/llvm.list \
@@ -33,6 +41,10 @@ RUN useradd -d /home/sim2real -m -s /bin/bash -U -G sudo,plugdev sim2real \
 USER sim2real
 ENV QT_X11_NO_MITSHM=1
 RUN pip3 install robomaster
+ADD --chown=sim2real src/cartographer/scripts/install_abseil.sh /home/sim2real/install_abseil.sh
+RUN cd /home/sim2real \
+ && ./install_abseil.sh \
+ && rm -rf abseil-cpp install_abseil.sh
 
 FROM base as dev
 RUN echo 'source ~/workspace/custom.bashrc' >> /home/sim2real/.bashrc \
