@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="visualization" value="true" />
+    <arg name="visualization" default="false" />
     <arg name="configuration_basename" value="mapping.lua" />
     <node name="cartographer_node" pkg="cartographer_ros" type="cartographer_node" args="
           -configuration_directory $(find rmus_cartographer)/config

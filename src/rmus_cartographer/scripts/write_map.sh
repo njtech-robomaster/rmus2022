@@ -9,5 +9,4 @@ rosservice call /write_state "filename: '$map_dir/map.pbstream'"
 rosrun cartographer_ros cartographer_pbstream_to_ros_map \
     -map_filestem="$map_dir/map" \
     -pbstream_filename="$map_dir/map.pbstream" \
-    -resolution=0.05 \
-    -initial_pose '{to_trajectory_id = 0, relative_pose = { translation = { 0., 0., 0. }, rotation = { 0.0, 0.0, 0.0 } } }'
+    -resolution=0.05

@@ -10,6 +10,7 @@ install(
         launch
         config
         rviz
+        maps
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 

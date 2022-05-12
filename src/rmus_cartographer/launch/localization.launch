@@ -2,7 +2,7 @@
 <launch>
   <include file="$(find ep_driver)/launch/ep_description.launch" />
   <include file="$(find ep_driver)/launch/bringup.launch" />
-  <include file="$(find rmus_cartographer)/launch/modules/cartographer_mapping.launch">
+  <include file="$(find rmus_cartographer)/launch/modules/cartographer_localization.launch">
     <arg name="visualization" value="true" />
   </include>
 </launch>
