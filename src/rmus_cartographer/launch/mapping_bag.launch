@@ -7,6 +7,6 @@
   <include file="$(find ep_driver)/launch/bringup.launch"/>
   <include file="$(find rmus_cartographer)/launch/modules/mapping.launch" />
 
-  <node name="player" pkg="rosbag" type="play" output="screen" args="--clock --rate=1.0 $(arg bagfile)" />
+  <node name="player" pkg="rosbag" type="play" output="screen" args="--clock --rate=1.0 $(arg bagfile) --topics /ep/odom /imu/data_raw /rplidar/scan" />
 
 </launch>

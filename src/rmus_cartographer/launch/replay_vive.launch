@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="bagfile" />
+  <param name="use_sim_time" value="true" />
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rmus_cartographer)/rviz/replay_vive.rviz" />
+  <node name="player" pkg="rosbag" type="play" output="screen" args="--clock --rate=1.0 $(arg bagfile)" />
+
+</launch>
