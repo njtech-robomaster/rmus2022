@@ -2,7 +2,7 @@ robot_base_frame: base_link
 
 transform_tolerance: 0.2
 
-update_frequency: 5.0
+update_frequency: 10.0
 publish_frequency: 5.0 # for debug only
 
 track_unknown_space: true
