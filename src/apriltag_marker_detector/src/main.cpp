@@ -25,7 +25,25 @@ const std::string result_window_name = "Marker Detections";
 const std::array<std::string, 8> tag_id_name_mapping{"1", "2", "3", "4",
                                                      "5", "B", "O", "X"};
 
-double tag_size;
+double get_tag_size(int id) {
+	switch (id) {
+	case 0: // 1
+	case 1: // 2
+	case 2: // 3
+	case 3: // 4
+	case 4: // 5
+		return 0.040;
+
+	case 5: // B
+	case 6: // O
+	case 7: // X
+		return 0.050;
+	default:
+		ROS_ERROR_STREAM("Unknown tag id " << id);
+		return 1;
+	}
+}
+
 bool detection_only_mode;
 bool enable_pose_array;
 bool preview_preprocess;
@@ -102,13 +120,6 @@ solve_markers_pose(const sensor_msgs::ImageConstPtr &image_msg,
 	auto k = camera_info_msg->K;
 	cv::Mat camera_matrix(3, 3, CV_64FC1, k.data());
 
-	std::vector<cv::Point3d> object_points = {
-	    {-tag_size / 2, tag_size / 2, 0},
-	    {tag_size / 2, tag_size / 2, 0},
-	    {tag_size / 2, -tag_size / 2, 0},
-	    {-tag_size / 2, -tag_size / 2, 0},
-	};
-
 	apriltag_msgs::ApriltagMarkerArray markers;
 
 	for (auto &detection : detections) {
@@ -125,6 +136,14 @@ solve_markers_pose(const sensor_msgs::ImageConstPtr &image_msg,
 		    detection.corners[0], // bottom-left
 		};
 
+		double tag_size = get_tag_size(marker.id);
+		std::vector<cv::Point3d> object_points = {
+		    {-tag_size / 2, tag_size / 2, 0},
+		    {tag_size / 2, tag_size / 2, 0},
+		    {tag_size / 2, -tag_size / 2, 0},
+		    {-tag_size / 2, -tag_size / 2, 0},
+		};
+
 		cv::Vec3d rvec, tvec;
 		if (!cv::solvePnP(object_points, image_points, camera_matrix,
 		                  camera_info_msg->D, rvec, tvec, false,
@@ -136,6 +155,10 @@ solve_markers_pose(const sensor_msgs::ImageConstPtr &image_msg,
 		cv::Rodrigues(rvec, cv_rotation_matrix);
 		Eigen::Matrix3d rotation_matrix;
 		cv::cv2eigen(cv_rotation_matrix, rotation_matrix);
+
+		Eigen::Matrix3d t;
+		t << 0, 1, 0, 0, 0, 1, 1, 0, 0;
+		rotation_matrix = rotation_matrix * t;
 
 		marker.pose.position.x = tvec[0];
 		marker.pose.position.y = tvec[1];
@@ -179,7 +202,6 @@ int main(int argc, char *argv[]) {
 	ros::init(argc, argv, "apriltag_marker_detector");
 
 	detection_only_mode = ros::param::param("~detection_only_mode", false);
-	tag_size = ros::param::param("~tag_size", 0.050);
 	enable_pose_array = ros::param::param("~publish_pose_array", true);
 
 	preview_preprocess = ros::param::param("~preview_preprocess", false);

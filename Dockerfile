@@ -26,6 +26,7 @@ RUN apt-get update \
        liblua5.2-dev                   \
        python3-sphinx                  \
        stow                            \
+       gdb                             \
  && wget -O /etc/apt/trusted.gpg.d/llvm.asc 'https://apt.llvm.org/llvm-snapshot.gpg.key' \
  && wget -O /etc/apt/trusted.gpg.d/realsense.asc 'https://keyserver.ubuntu.com/pks/lookup?op=hget&search=490918728cb41b2e9f4478a11f27750d' \
  && echo 'deb https://apt.llvm.org/focal/ llvm-toolchain-focal main' > /etc/apt/sources.list.d/llvm.list \
@@ -58,4 +59,4 @@ ADD --chown=sim2real build.sh /home/sim2real/workspace/
 RUN GENERATE_COMPILE_COMMANDS=false /home/sim2real/workspace/build.sh
 ADD entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["roslaunch", "--wait", "apriltag_marker_detector", "detection_evaluation.launch"]
+CMD ["roslaunch", "--wait", "arm_controller", "grasp_evaluation.launch"]

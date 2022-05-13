@@ -1,0 +1,8 @@
+uint8 ACTION_GRASP_ORE = 1
+uint8 ACTION_PLACE_ORE = 2
+uint8 ACTION_STACK_ORE = 3
+
+int32 marker_id
+uint8 action_type
+---
+---
