@@ -27,32 +27,32 @@ void GraspPlace::goalCallback() {
 	auto goal = action_server.acceptNewGoal();
 	this->marker_id = goal->marker_id;
 	switch (goal->action_type) {
-	case arm_controller::GraspPlaceGoal::ACTION_GRASP_ORE:
+	case arm_controller_srvs::GraspPlaceGoal::ACTION_GRASP_ORE:
 		if (!isOreMarker(marker_id)) {
-			action_server.setAborted(arm_controller::GraspPlaceResult(),
+			action_server.setAborted(arm_controller_srvs::GraspPlaceResult(),
 			                         "Can only grasp 0~4");
 			return;
 		}
 		this->action = Action::GRASP_ORE;
 		break;
-	case arm_controller::GraspPlaceGoal::ACTION_PLACE_ORE:
+	case arm_controller_srvs::GraspPlaceGoal::ACTION_PLACE_ORE:
 		if (isOreMarker(marker_id)) {
-			action_server.setAborted(arm_controller::GraspPlaceResult(),
+			action_server.setAborted(arm_controller_srvs::GraspPlaceResult(),
 			                         "Can only place 5~7");
 			return;
 		}
 		this->action = Action::PLACE_ORE;
 		break;
-	case arm_controller::GraspPlaceGoal::ACTION_STACK_ORE:
+	case arm_controller_srvs::GraspPlaceGoal::ACTION_STACK_ORE:
 		if (!isOreMarker(marker_id)) {
-			action_server.setAborted(arm_controller::GraspPlaceResult(),
+			action_server.setAborted(arm_controller_srvs::GraspPlaceResult(),
 			                         "Can only stack 0~4");
 			return;
 		}
 		this->action = Action::STACK_ORE;
 		break;
 	default:
-		action_server.setAborted(arm_controller::GraspPlaceResult(),
+		action_server.setAborted(arm_controller_srvs::GraspPlaceResult(),
 		                         "Unknown action");
 		return;
 	}
@@ -77,7 +77,7 @@ void GraspPlace::onFiducialMarkers(
 		observe_retries++;
 
 		if (observe_retries > 10) {
-			action_server.setAborted(arm_controller::GraspPlaceResult(),
+			action_server.setAborted(arm_controller_srvs::GraspPlaceResult(),
 			                         "No marker detected");
 			this->state = State::IDLE;
 			return;
@@ -109,8 +109,8 @@ void GraspPlace::onFiducialMarkers(
 			    return;
 
 		    if (feedback.state == MoveFeedback::State::FAIL) {
-			    action_server.setAborted(arm_controller::GraspPlaceResult(),
-			                             "Failed to aim");
+			    action_server.setAborted(
+			        arm_controller_srvs::GraspPlaceResult(), "Failed to aim");
 			    this->state = State::IDLE;
 
 		    } else if (feedback.state == MoveFeedback::State::SUCCESS) {
@@ -143,7 +143,7 @@ void GraspPlace::onFiducialMarkers(
 						                   MoveFeedback::State::FAIL) {
 							        this->state = State::IDLE;
 							        action_server.setAborted(
-							            arm_controller::GraspPlaceResult(),
+							            arm_controller_srvs::GraspPlaceResult(),
 							            "Moving back failed");
 						        }
 					        });

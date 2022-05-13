@@ -3,7 +3,7 @@
 #include "chassis_move.hpp"
 #include <actionlib/server/simple_action_server.h>
 #include <apriltag_msgs/ApriltagMarkerArray.h>
-#include <arm_controller/GraspPlaceAction.h>
+#include <arm_controller_srvs/GraspPlaceAction.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <optional>
 #include <ros/ros.h>
@@ -29,7 +29,7 @@ class GraspPlace {
 	std::optional<TaskDetails>
 	get_task_details(const apriltag_msgs::ApriltagMarkerArray::ConstPtr &msg);
 
-	actionlib::SimpleActionServer<arm_controller::GraspPlaceAction>
+	actionlib::SimpleActionServer<arm_controller_srvs::GraspPlaceAction>
 	    action_server;
 
   private:

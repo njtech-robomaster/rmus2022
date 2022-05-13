@@ -1,0 +1,14 @@
+<package format="2">
+    <name>arm_controller_srvs</name>
+    <version>0.0.0</version>
+    <description>arm_controller_srvs</description>
+    <maintainer email="yushijinhun@gmail.com">Haowei Wen</maintainer>
+    <license>GPLv3</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <depend>actionlib_msgs</depend>
+
+    <exec_depend>message_generation</exec_depend>
+
+</package>

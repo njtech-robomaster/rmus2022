@@ -9,11 +9,9 @@
 
     <depend>roscpp</depend>
     <depend>tf2_eigen</depend>
-    <depend>actionlib_msgs</depend>
+    <depend>arm_controller_srvs</depend>
     <depend>nav_msgs</depend>
     <depend>tf2_ros</depend>
     <depend>apriltag_msgs</depend>
-
-    <exec_depend>message_generation</exec_depend>
 
 </package>

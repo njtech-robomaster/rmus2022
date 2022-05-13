@@ -6,7 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
 	roscpp
     tf2_eigen
     tf2_ros
-    actionlib_msgs
+    arm_controller_srvs
     nav_msgs
     apriltag_msgs
 )
@@ -14,21 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_action_files(
-    DIRECTORY action
-    FILES
-        GraspPlace.action
-)
-generate_messages(
-    DEPENDENCIES
-        actionlib_msgs
-        std_msgs
-)
-
-catkin_package(
-    CATKIN_DEPENDS
-        actionlib_msgs
-)
+catkin_package()
 
 file(GLOB_RECURSE CXX_SRC "src/*.hpp" "src/*.cpp")
 add_executable(${PROJECT_NAME} ${CXX_SRC})
