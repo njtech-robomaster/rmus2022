@@ -1,5 +1,6 @@
 #include "async_executor.hpp"
 #include "detector.hpp"
+#include "orientation_fixer.hpp"
 #include <apriltag_msgs/ApriltagMarkerArray.h>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseArray.h>
@@ -37,7 +38,7 @@ double get_tag_size(int id) {
 	case 5: // B
 	case 6: // O
 	case 7: // X
-		return 0.050;
+		return 0.045;
 	default:
 		ROS_ERROR_STREAM("Unknown tag id " << id);
 		return 1;
@@ -178,6 +179,9 @@ void process_frame(const sensor_msgs::ImageConstPtr &image_msg,
 	                                    sensor_msgs::image_encodings::BGR8);
 	auto grayscale = preprocess(cv_image->image);
 	auto detections = detector->detect(grayscale);
+	for (auto &marker : detections) {
+		fix_marker_orientation(marker);
+	}
 
 	if (preview_results) {
 		show_results(cv_image->image, detections);

@@ -226,8 +226,22 @@ std::optional<TaskDetails> GraspPlace::get_task_details(
 
 	} else if (action == Action::PLACE_ORE) {
 		// exchange marker
+		for (const auto &marker : msg->markers) {
+			if (marker.id == this->marker_id) {
+
+				auto pose = get_marker_pose(marker);
+				offset_pose(pose, {-0.120 / 2 + 0.050, 0, 0.060});
+
+				TaskDetails t;
+				t.target = pose;
+				t.back_distance = 0.2;
+				t.ideal_seperation = 0.20;
+				t.pick = false;
+				return t;
+			}
+		}
+		return std::nullopt;
+	} else {
 		return std::nullopt;
 	}
-
-	return std::nullopt;
 }
