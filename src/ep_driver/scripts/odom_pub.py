@@ -142,9 +142,11 @@ if __name__ == '__main__':
     # 订阅底盘位置信息
     ep_chassis.sub_position(freq=10, callback=sub_position_handler)
     ep_chassis.sub_attitude(freq=10, callback=sub_attitude_info_handler)
-    #ep_chassis.sub_imu(freq=10, callback=sub_imu_info_handler)
+    ep_chassis.sub_imu(freq=10, callback=sub_imu_info_handler)
     ep_chassis.sub_velocity(freq=10, callback=sub_velocity_info_handler)
-    #ep_chassis.unsub_position()
-    #ep_chassis.unsub_attitude()
-    
-    #ep_robot.close()
+    rospy.spin()
+    ep_chassis.unsub_position()
+    ep_chassis.unsub_attitude()
+    ep_chassis.unsub_imu()
+    ep_chassis.unsub_velocity()
+    ep_robot.close()
