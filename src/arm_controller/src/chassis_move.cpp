@@ -3,8 +3,8 @@
 #include <nav_msgs/Odometry.h>
 #include <tuple>
 
-constexpr double STATIC_LINEAR_VELOCITY = 0.005;
-constexpr double STATIC_ANGULAR_VELOCITY = 0.005;
+constexpr double STATIC_LINEAR_VELOCITY = 0.01;
+constexpr double STATIC_ANGULAR_VELOCITY = 0.02;
 constexpr double IDLE_TIME = 0.3;
 constexpr double X_TOLERANCE = 0.15;
 constexpr double Y_TOLERANCE = 0.15;
@@ -31,21 +31,30 @@ ChassisMove::ChassisMove() {
 		    double odom_x = odom->pose.pose.position.x;
 		    double odom_y = odom->pose.pose.position.y;
 		    double odom_yaw = get_yaw(odom->pose.pose.orientation);
-		    double odom_vx = odom->twist.twist.linear.x;
-		    double odom_vy = odom->twist.twist.linear.y;
 		    double odom_vtheta = odom->twist.twist.angular.z;
+
+		    double odom_vx, odom_vy;
+		    if (last_odom_pos.has_value()) {
+			    double dt =
+			        (odom->header.stamp - std::get<0>(*last_odom_pos)).toSec();
+			    odom_vx = (odom_x - std::get<1>(*last_odom_pos)) / dt;
+			    odom_vy = (odom_y - std::get<2>(*last_odom_pos)) / dt;
+		    } else {
+			    odom_vx = 0;
+			    odom_vy = 0;
+		    }
+		    last_odom_pos = {odom->header.stamp, odom_x, odom_y};
 
 		    auto send_cmd_position = [&] {
 			    geometry_msgs::Twist pos_cmd;
 
-			    if (std::abs(goal.error_x) > X_TOLERANCE ||
-			        std::abs(goal.error_y) > Y_TOLERANCE) {
+			    if (std::abs(goal.error_theta) > THETA_TOLERANCE) {
+				    pos_cmd.angular.z = goal.error_theta;
+				    ROS_INFO("Adjusting yaw");
+			    } else {
 				    pos_cmd.linear.x = goal.error_x;
 				    pos_cmd.linear.y = goal.error_y;
 				    ROS_INFO("Adjusting x,y");
-			    } else {
-				    pos_cmd.angular.z = goal.error_theta;
-				    ROS_INFO("Adjusting yaw");
 			    }
 
 			    postion_pub.publish(pos_cmd);
@@ -142,7 +151,7 @@ ChassisMove::ChassisMove() {
 					                    << goal.error_x
 					                    << " dy=" << goal.error_y
 					                    << " dtheta=" << goal.error_theta);
-					    goal.state = MoveFeedback::State::FIXING_XY;
+					    goal.state = MoveFeedback::State::FIXING_YAW;
 					    current_callback(goal);
 				    }
 			    }
@@ -170,13 +179,16 @@ ChassisMove::ChassisMove() {
 				    moving = true;
 			    }
 			    cmd_vel_pub.publish(twist);
-			    if (!moving) {
-				    ROS_INFO_STREAM("Goal fixing_xy done dx="
+			    if (moving) {
+				    current_callback(goal);
+			    } else {
+				    goal.state = MoveFeedback::State::SUCCESS;
+				    ROS_INFO_STREAM("Goal success dx="
 				                    << goal.error_x << " dy=" << goal.error_y
 				                    << " dtheta=" << goal.error_theta);
-				    goal.state = MoveFeedback::State::FIXING_YAW;
+				    current_callback(goal);
+				    current_callback = nullptr;
 			    }
-			    current_callback(goal);
 
 		    } break;
 
@@ -200,12 +212,11 @@ ChassisMove::ChassisMove() {
 			    if (moving) {
 				    current_callback(goal);
 			    } else {
-				    goal.state = MoveFeedback::State::SUCCESS;
-				    ROS_INFO_STREAM("Goal success dx="
+				    ROS_INFO_STREAM("Goal fixing_xy done dx="
 				                    << goal.error_x << " dy=" << goal.error_y
 				                    << " dtheta=" << goal.error_theta);
+				    goal.state = MoveFeedback::State::FIXING_XY;
 				    current_callback(goal);
-				    current_callback = nullptr;
 			    }
 		    } break;
 
