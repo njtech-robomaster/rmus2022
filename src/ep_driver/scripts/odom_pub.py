@@ -47,36 +47,6 @@ def sub_imu_info_handler(imu_info):
     imu.header.stamp= rospy.Time.now()
     imu.header.frame_id = "imu_link"
 
-    imu.orientation_covariance[0] = 0
-    imu.orientation_covariance[1] = 0
-    imu.orientation_covariance[2] = 0
-    imu.orientation_covariance[3] = 0
-    imu.orientation_covariance[4] = 0
-    imu.orientation_covariance[5] = 0
-    imu.orientation_covariance[6] = 0
-    imu.orientation_covariance[7] = 0
-    imu.orientation_covariance[8] = 0
-    imu.angular_velocity_covariance[8]=0
-    
-    imu.angular_velocity_covariance[0]=0
-    imu.angular_velocity_covariance[1]=0
-    imu.angular_velocity_covariance[2]=0
-    imu.angular_velocity_covariance[3]=0
-    imu.angular_velocity_covariance[4]=0
-    imu.angular_velocity_covariance[5]=0
-    imu.angular_velocity_covariance[6]=0
-    imu.angular_velocity_covariance[7]=0
-
-    imu.linear_acceleration_covariance[0]=0
-    imu.linear_acceleration_covariance[1]=0
-    imu.linear_acceleration_covariance[2]=0
-    imu.linear_acceleration_covariance[3]=0
-    imu.linear_acceleration_covariance[4]=0
-    imu.linear_acceleration_covariance[5]=0
-    imu.linear_acceleration_covariance[6]=0
-    imu.linear_acceleration_covariance[7]=0
-    imu.linear_acceleration_covariance[8]=0
-
     orientation = tf.transformations.quaternion_from_euler(0, 0, ang_z)
     imu.orientation=orientation
 
@@ -88,7 +58,9 @@ def sub_imu_info_handler(imu_info):
     imu.angular_velocity.y = gyro_y
     imu.angular_velocity.z = gyro_z
 
+    print('a')
     imu_publisher.publish(imu)
+    print('b')
     print(acc_x, acc_y, acc_z)
 
 
