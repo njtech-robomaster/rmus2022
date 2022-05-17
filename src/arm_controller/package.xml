@@ -13,5 +13,6 @@
     <depend>nav_msgs</depend>
     <depend>tf2_ros</depend>
     <depend>apriltag_msgs</depend>
+    <depend>move_base_msgs</depend>
 
 </package>

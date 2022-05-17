@@ -110,7 +110,7 @@ ChassisMove::ChassisMove() {
 
 			    double linear_vel =
 			        std::sqrt(odom_vx * odom_vx + odom_vy * odom_vy);
-			    double angular_vel = odom_vtheta;
+			    double angular_vel = std::abs(odom_vtheta);
 			    if (linear_vel > STATIC_LINEAR_VELOCITY ||
 			        angular_vel > STATIC_ANGULAR_VELOCITY) {
 				    goal.idle_since = ros::Time::now();
@@ -128,8 +128,9 @@ ChassisMove::ChassisMove() {
 						                    << " dy=" << goal.error_y
 						                    << " dtheta=" << goal.error_theta);
 						    goal.state = MoveFeedback::State::FAIL;
-						    current_callback(goal);
+						    auto cb = current_callback;
 						    current_callback = nullptr;
+						    cb(goal);
 
 					    } else {
 						    goal.idle_since = ros::Time::now();
@@ -186,8 +187,9 @@ ChassisMove::ChassisMove() {
 				    ROS_INFO_STREAM("Goal success dx="
 				                    << goal.error_x << " dy=" << goal.error_y
 				                    << " dtheta=" << goal.error_theta);
-				    current_callback(goal);
+				    auto cb = current_callback;
 				    current_callback = nullptr;
+				    cb(goal);
 			    }
 
 		    } break;
@@ -237,6 +239,7 @@ void ChassisMove::execute(double dx, double dy, double dtheta,
 	}
 
 	current_callback = callback;
+	last_odom_pos = std::nullopt;
 	goal = MoveFeedback();
 	goal.state = MoveFeedback::State::INIT;
 	goal.goal_dx = dx;

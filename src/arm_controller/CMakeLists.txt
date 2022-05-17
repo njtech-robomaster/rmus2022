@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
     arm_controller_srvs
     nav_msgs
     apriltag_msgs
+    move_base_msgs
 )
 
 set(CMAKE_CXX_STANDARD 20)
