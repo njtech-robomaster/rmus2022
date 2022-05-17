@@ -8,9 +8,6 @@
         <param name="preview_preprocess" value="true" />
         <param name="preview_results" value="true" />
     </node>
-    <!-- <node name="arm_controller" pkg="arm_controller" type="arm_controller" output="screen" /> -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find arm_controller)/rviz/grasp_place.rviz" />
-
-    <!-- <arg name="node_start_delay" default="3.0" />   -->
-    <!-- <node name="arm_controller_client" pkg="arm_controller" type="test_action" output="screen" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' " /> -->
+    <!-- <node name="arm_controller" pkg="arm_controller" type="arm_controller" output="screen" /> -->
 </launch>
