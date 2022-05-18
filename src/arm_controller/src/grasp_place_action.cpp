@@ -6,7 +6,7 @@ constexpr double BASE_LINK_HEIGHT = 0.050;
 constexpr double STATIC_LINEAR_VELOCITY = 0.01;
 constexpr double STATIC_ANGULAR_VELOCITY = 0.02;
 
-constexpr double STATIC_TIME = 0.3;
+constexpr double STATIC_TIME = 0.5;
 
 constexpr bool isOreMarker(int id) {
 	return id >= 0 && id <= 4;
@@ -14,7 +14,7 @@ constexpr bool isOreMarker(int id) {
 
 GraspPlace::GraspPlace()
     : action_server("grasp_place", false), tf_buffer(ros::Duration(60)),
-      tf_listener(tf_buffer), move_base("move_base", false) {
+      tf_listener(tf_buffer), move_base("move_base", true) {
 	arm_target_pub = nh.advertise<geometry_msgs::PoseStamped>("arm_target", 1);
 	fiducial_markers_sub = nh.subscribe<apriltag_msgs::ApriltagMarkerArray>(
 	    "markers", 1,
@@ -42,6 +42,8 @@ GraspPlace::GraspPlace()
 		    }
 		    last_odom = *odom;
 	    });
+
+	move_base.waitForServer();
 
 	action_server.start();
 }
@@ -138,10 +140,6 @@ void GraspPlace::onFiducialMarkers(
 		arm_target_pub.publish(task.target);
 
 		this->state = State::AIMING1;
-
-		if (task.pick) {
-			arm.open_gripper();
-		}
 
 		auto [goal_x, goal_y, goal_yaw] =
 		    compute_goal(task.target, task.ideal_observing_distance);

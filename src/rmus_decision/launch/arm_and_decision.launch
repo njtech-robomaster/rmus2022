@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="arm_controller" pkg="arm_controller" type="arm_controller" output="screen" />
+    <include file="$(find rmus_decision)/launch/decision_node.launch" />
+</launch>

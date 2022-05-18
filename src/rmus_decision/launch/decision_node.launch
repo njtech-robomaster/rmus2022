@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="rmus_decision" pkg="rmus_decision" type="rmus_decision" output="screen">
+        <rosparam file="$(find rmus_decision)/config/decision.yaml" command="load" />
+    </node>
+</launch>
