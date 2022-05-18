@@ -50,20 +50,11 @@ import sys
 import time
 
 # 直连模式下，机器人默认 IP 地址为 192.168.2.1, 控制命令端口号为 40923
-host = "192.168.42.2"
-port = 40923
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
 class epRobot(object):
 
     def __init__(self) -> None:
-        self.ep_robot = robot.Robot()
-        self.ep_robot.initialize(conn_type="sta")
-        self.ep_chassis = self.ep_robot.chassis
-        self.ep_arm = self.ep_robot.robotic_arm
-        self.ep_gripper=self.ep_robot.gripper
-
         self.listener()
         self.turn_off_connect()
 
@@ -141,38 +132,18 @@ class epRobot(object):
         # print(cmd)
 
     def listener(self):
-
-        address = (host, int(port))
-
-        # 与机器人控制命令端口建立 TCP 连接
-
-        print("Connecting...")
-
-        s.connect(address)
-
-        print("Connected!")
-
-        msg = 'command;'
-
-        # 发送控制命令给机器人
-        s.send(msg.encode('utf-8'))
-        cmd = "chassis push position on attitude on;"
-        s.send(cmd.encode('utf-8'))
-        print(cmd)
-        try:
-            # 等待机器人返回执行结果
-            buf = s.recv(1024)
-
-            print(buf.decode('utf-8'))
-        except socket.error as e:
-            print("Error receiving :", e)
-            sys.exit(1)
-
         # In ROS, nodes are uniquely named. If two nodes with the same
         # name are launched, the previous one is kicked off. The
         # anonymous=True flag means that rospy will choose a unique
         # name for our 'listener' node so that multiple listeners can
         # run simultaneously.
+
+        self.ep_robot = robot.Robot()
+        self.ep_robot.initialize(conn_type="sta")
+        self.ep_chassis = self.ep_robot.chassis
+        self.ep_arm = self.ep_robot.robotic_arm
+        self.ep_gripper=self.ep_robot.gripper
+
         rospy.init_node('listener', anonymous=True)
 
         rospy.Subscriber('cmd_vel', Twist, self.callback)
@@ -183,19 +154,6 @@ class epRobot(object):
         rospy.spin()
 
     def turn_off_connect(self):
-        try:
-            # 等待机器人返回执行结果
-            buf = s.recv(1024)
-
-            if buf.decode('utf-8') == 'ok;':
-                print("")
-                print("Disable SDK")
-        except socket.error as e:
-            print("Error receiving :", e)
-            sys.exit(1)
-        # 关闭端口连接
-        s.shutdown(socket.SHUT_WR)
-        s.close()
         self.ep_robot.close()
 
 if __name__ == '__main__':
