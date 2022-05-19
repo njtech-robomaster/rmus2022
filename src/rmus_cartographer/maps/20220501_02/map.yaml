@@ -1,0 +1,6 @@
+image: /home/sim2real/workspace/src/rmus_cartographer/maps/20220501_02/map.pgm
+resolution: 0.05
+origin: [-0.82849, -1.49287, 0.0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
