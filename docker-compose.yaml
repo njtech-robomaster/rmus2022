@@ -17,13 +17,6 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./server_launch.sh:/server_launch.sh:ro
-      - ./server_healthcheck.sh:/server_healthcheck.sh:ro
-    healthcheck:
-      test: [ "CMD", "/server_healthcheck.sh" ]
-      interval: 3s
-      timeout: 3s
-      retries: 3
-      start_period: 30s
 
   sim2real_client:
     build:
