@@ -47,8 +47,7 @@ from sensor_msgs.msg import Imu
 class epRobot(object):
 
     def __init__(self) -> None:
-        self.listener()
-        self.turn_off_connect()
+        pass
 
     def callback(self, data):
         rospy.loginfo(rospy.get_caller_id() + 'I heard %f %f %f',
@@ -125,9 +124,11 @@ class epRobot(object):
         imu.header.stamp = rospy.Time.now()
         imu.header.frame_id = "imu_link"
 
-        orientation = tf.transformations.quaternion_from_euler(
-            0, 0, self.ang_z)
-        imu.orientation = orientation
+        q = tf.transformations.quaternion_from_euler(0, 0, self.ang_z)
+        imu.orientation.x = q[0]
+        imu.orientation.y = q[1]
+        imu.orientation.z = q[2]
+        imu.orientation.w = q[3]
 
         imu.linear_acceleration.x = acc_x
         imu.linear_acceleration.y = acc_y
@@ -137,7 +138,12 @@ class epRobot(object):
         imu.angular_velocity.y = gyro_y
         imu.angular_velocity.z = gyro_z
 
-        self.imu_publisher.publish(imu)
+        try:
+            self.imu_publisher.publish(imu)
+        except Exception as e:
+            print(e)
+        if rospy.is_shutdown():
+            sys.exit(1)
 
     def sub_velocity_info_handler(self, imu_info):
         vgx, vgy, vgz, vbx, vby, vbz = imu_info
@@ -161,8 +167,8 @@ class epRobot(object):
         if rospy.is_shutdown():
             sys.exit(1)
 
-    def listener(self):
-        robomaster.config.LOCAL_IP_STR = "192.168.42.3"
+    def connect(self):
+        robomaster.config.LOCAL_IP_STR = "192.168.42.1"
 
         self.ep_robot = robot.Robot()
         self.ep_robot.initialize(conn_type='rndis')
@@ -173,9 +179,8 @@ class epRobot(object):
 
         rospy.init_node('epsdk', anonymous=True)
 
-        self.odom_publisher = rospy.Publisher(
-            "/ep/odom", Odometry, queue_size=10)
-        self.imu_publisher = rospy.Publisher("/ep/imu", Imu, queue_size=1)
+        self.imu_publisher = rospy.Publisher("/ep/imu", Imu, queue_size=10)
+        self.odom_publisher = rospy.Publisher("/ep/odom", Odometry, queue_size=10)
 
         self.pos_x = 0
         self.pos_y = 0
@@ -184,21 +189,17 @@ class epRobot(object):
         self.vel_y = 0
         self.ang_vel_z = 0
 
-        self.ep_chassis.sub_position(
-            freq=10, callback=self.sub_position_handler)
-        self.ep_chassis.sub_attitude(
-            freq=10, callback=self.sub_attitude_info_handler)
+        self.ep_chassis.sub_position(freq=10, callback=self.sub_position_handler)
+        self.ep_chassis.sub_attitude(freq=10, callback=self.sub_attitude_info_handler)
         self.ep_chassis.sub_imu(freq=10, callback=self.sub_imu_info_handler)
-        self.ep_chassis.sub_velocity(
-            freq=10, callback=self.sub_velocity_info_handler)
+        self.ep_chassis.sub_velocity(freq=10, callback=self.sub_velocity_info_handler)
 
         rospy.Subscriber('cmd_vel', Twist, self.callback)
         rospy.Subscriber('cmd_position', Twist, self.callback_position)
         rospy.Subscriber('arm_position', Pose, self.callback_arm)
         rospy.Subscriber('arm_gripper', Point, self.callback_gripper)
-        rospy.spin()
 
-    def turn_off_connect(self):
+    def disconnect(self):
         self.ep_chassis.unsub_position()
         self.ep_chassis.unsub_attitude()
         self.ep_chassis.unsub_imu()
@@ -208,3 +209,6 @@ class epRobot(object):
 
 if __name__ == '__main__':
     ep = epRobot()
+    ep.connect()
+    rospy.spin()
+    ep.disconnect()

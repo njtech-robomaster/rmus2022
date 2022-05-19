@@ -6,7 +6,6 @@ catkin_package()
 catkin_install_python(
     PROGRAMS
         scripts/ep_comm_node.py
-        scripts/odom_pub.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
