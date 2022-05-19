@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find ep_driver)/launch/ep_description.launch" />
+    <include file="$(find ep_driver)/launch/bringup.launch" />
+    <include file="$(find rmus_cartographer)/launch/modules/cartographer_localization.launch" />
+    <include file="$(find rmus_navigation)/launch/modules/move_base.launch" />
+    <node name="apriltag_marker_detector" pkg="apriltag_marker_detector" type="apriltag_marker_detector" output="screen">
+        <param name="preview_preprocess" value="true" />
+        <param name="preview_results" value="true" />
+    </node>
+    <node name="arm_controller" pkg="arm_controller" type="arm_controller" output="screen" />
+    <include file="$(find rmus_decision)/launch/decision_node.launch" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find arm_controller)/rviz/grasp_place.rviz" />
+</launch>
+    
