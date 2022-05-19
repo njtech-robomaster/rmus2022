@@ -36,6 +36,7 @@ class DecisionNode {
 	std::array<geometry_msgs::Pose, 5> ore_locations;
 	std::array<geometry_msgs::Pose, 3> exchange_locations;
 	std::array<int, 5> first_ore_preference;
+	std::optional<std::array<int, 3>> task_ores_override;
 
 	State state;
 	std::array<int, 3> task_ores;

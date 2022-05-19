@@ -9,3 +9,4 @@ locations:
   exchange_B: [1.05052, 1.9234, -0.134978]
   exchange_O: [1.05859, 1.80549, -0.0527012]
   exchange_X: [1.04136, 1.53727, 0.195646]
+# task_ores_override: [2, 5, 4]

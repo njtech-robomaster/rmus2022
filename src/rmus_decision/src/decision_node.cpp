@@ -61,6 +61,14 @@ DecisionNode::DecisionNode()
 		ore_id--; // convert 1~5 to 0~4
 	}
 
+	if (nh_private.hasParam("task_ores_override")) {
+		task_ores_override =
+		    retrive_array_param<int, 3>(nh_private, "task_ores_override");
+		for (int &ore_id : *task_ores_override) {
+			ore_id--; // convert 1~5 to 0~4
+		}
+	}
+
 	move_action.waitForServer();
 	arm_action.waitForServer();
 }
@@ -124,6 +132,11 @@ void DecisionNode::on_markers_detected(
 
 	for (int i = 0; i < 3; i++) {
 		task_ores[i] = std::get<0>(exchange_tags[i]);
+	}
+
+	if (task_ores_override.has_value()) {
+		ROS_INFO("Using overrided ore order");
+		task_ores = *task_ores_override;
 	}
 
 	ROS_INFO("Ores: %d, %d, %d", task_ores[0] + 1, task_ores[1] + 1,
