@@ -13,10 +13,12 @@ services:
             - capabilities: [ gpu ]
     environment:
       - DISPLAY
+      - SERVER_PATCH
       - QT_X11_NO_MITSHM=1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./server_launch.sh:/server_launch.sh:ro
+      - ./server_patches:/server_patches:ro
 
   sim2real_client:
     build:

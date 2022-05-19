@@ -1,0 +1,13 @@
+diff --git a/src/nodes/habitat_env_node.py b/src/nodes/habitat_env_node.py
+index 76ad9c2..7047230 100755
+--- a/src/nodes/habitat_env_node.py
++++ b/src/nodes/habitat_env_node.py
+@@ -960,7 +960,7 @@ class HabitatEnvNode:
+                     origin = np.mat([[0.12], [0.15], [0]])
+ 
+                     origin = trans_mat*origin
+-                    ray.origin = mn.Vector3(origin[0, 0]+self.sim.robot.sim_obj.transformation[3][0], origin[1, 0], origin[2, 0]+self.sim.robot.sim_obj.transformation[3][2])
++                    ray.origin = mn.Vector3(origin[0, 0]+self.sim.robot.sim_obj.transformation[3][0], 0.01, origin[2, 0]+self.sim.robot.sim_obj.transformation[3][2])
+ 
+                     for i in range(num_readings+1,0,-1):
+                         ray.direction = mn.Vector3(math.cos(i/num_readings*2*np.pi-th_world),0,math.sin(i/num_readings*np.pi*2-th_world))

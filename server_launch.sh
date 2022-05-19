@@ -45,4 +45,12 @@ echo "roscore started!" >&2
 
 #### Start simulator
 cd ~/ros_x_habitat_ws/src/ros_x_habitat/
+
+if [[ "$SERVER_PATCH" != "" ]]; then
+    git add -A
+    git reset HEAD --hard
+    echo "Applying patch $SERVER_PATCH"
+    git apply "/server_patches/$SERVER_PATCH"
+fi
+
 python3 src/scripts/roam_with_joy.py --hab-env-config-path ./configs/roam_configs/pointnav_rgbd_roam_mp3d_test_scenes.yaml
