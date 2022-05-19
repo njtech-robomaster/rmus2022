@@ -1,4 +1,4 @@
-image: /home/sim2real/workspace/src/rmus_cartographer/maps/20220501_03/map.pgm
+image: map.pgm
 resolution: 0.05
 origin: [-0.896803, -1.46167, 0.0]
 negate: 0
