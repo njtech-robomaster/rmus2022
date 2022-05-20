@@ -314,7 +314,8 @@ Visualization Manager:
           Marker Topic: /move_base/TebLocalPlannerROS/teb_markers
           Name: TEB Markers
           Namespaces:
-            {}
+            PointObstacles: true
+            RobotFootprintModel: true
           Queue Size: 100
           Value: true
         - Alpha: 1
@@ -491,7 +492,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 3.630352258682251
+      Distance: 7.621406078338623
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -499,8 +500,8 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 2.5024404525756836
-        Y: -1.1981658935546875
+        X: 0.008698105812072754
+        Y: 0.16883203387260437
         Z: -7.152557373046875e-07
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
@@ -509,7 +510,7 @@ Visualization Manager:
       Near Clip Distance: 0.009999999776482582
       Pitch: 1.5697963237762451
       Target Frame: <Fixed Frame>
-      Yaw: 3.074526786804199
+      Yaw: 3.1695265769958496
     Saved: ~
 Window Geometry:
   Displays:
