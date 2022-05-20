@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find ep_driver)/launch/bringup.launch" pass_all_args="true" />
+    <node name="odom_republisher" pkg="odom_republisher" type="odom_republisher" output="screen">
+        <remap from="odom" to="/ep/odom" />
+    </node>
+</launch>
