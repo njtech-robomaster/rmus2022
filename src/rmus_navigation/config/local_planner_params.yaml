@@ -47,9 +47,6 @@ TebLocalPlannerROS:
   obstacle_poses_affected: 10
   obstacle_association_force_inclusion_factor: 4.0
   obstacle_association_cutoff_factor: 10.0
-  costmap_converter_plugin: ""
-  costmap_converter_spin_thread: True
-  costmap_converter_rate: 5
 
   # Optimization
 
@@ -79,3 +76,4 @@ TebLocalPlannerROS:
   # Costmap converter
   #costmap_converter_plugin: "costmap_converter::CostmapToPolygonsDBSMCCH"
   costmap_converter_rate: 10
+  costmap_converter_spin_thread: true
