@@ -1,10 +1,17 @@
+<?xml version="1.0"?>
 <launch>
     <node name="rplidarNode" pkg="rplidar_ros" type="rplidarNode" output="screen">
-        <param name="serial_port"       value="/dev/rplidar" />
-        <param name="serial_baudrate"   value="115200" />
-        <param name="frame_id"          value="laser" />
-        <param name="inverted"          value="false" />
-        <param name="angle_compensate"  value="true" />
-        <param name="scan_mode"         value="Boost"/>
+        <param name="serial_port" value="/dev/rplidar" />
+        <param name="serial_baudrate" value="115200" />
+        <param name="frame_id" value="laser_link" />
+        <param name="inverted" value="false" />
+        <param name="angle_compensate" value="true" />
+        <param name="scan_mode" value="Boost" />
+        <remap from="scan" to="/rplidar/base_scan" />
+    </node>
+    <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="laser_filter" output="screen">
+        <remap from="scan" to="/rplidar/base_scan" />
+        <remap from="scan_filtered" to="/rplidar/scan" />
+        <rosparam command="load" file="$(find rmus_bringup)/config/laser_filter.yaml" />
     </node>
 </launch>

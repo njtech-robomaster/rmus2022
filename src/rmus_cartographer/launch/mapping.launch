@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <launch>
-  <include file="$(find ep_driver)/launch/ep_description.launch" />
-  <include file="$(find ep_driver)/launch/bringup.launch" />
-  <include file="$(find rmus_cartographer)/launch/modules/cartographer_mapping.launch">
-    <arg name="visualization" value="true" />
-  </include>
+  <arg name="visualization" default="true" />
+  <include file="$(find ep_driver)/launch/ep_description.launch" pass_all_args="true" />
+  <include file="$(find ep_driver)/launch/bringup.launch" pass_all_args="true" />
+  <include file="$(find rmus_cartographer)/launch/modules/cartographer_mapping.launch" pass_all_args="true" />
 </launch>

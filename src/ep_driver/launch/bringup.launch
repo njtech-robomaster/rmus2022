@@ -1,29 +1,23 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="robot_mode" default="sim" />
-    <arg name="use_laser" default="false" />
-    <arg name="use_imu" default="false" />
+    <arg name="use_laser" default="true" />
     <arg name="use_rgbd" default="true" />
-    <arg name="use_odometry" default="false" />
-    <arg name="use_actuators" default="false" />
+    <arg name="use_ep" default="true" />
 
     <!-- When robot_mode is "real", start sensor drivers. -->
     <group if="$(eval 'real' in arg('robot_mode'))">
 
         <!-- Laserscan -->
-        <include if="$(arg use_laser)" file="$(find rplidar_ros)/launch/rplidar.launch" />
-
-        <!-- Imu -->
-        <include if="$(arg use_imu)" file="$(find imu_interface_broadcaster)/launch/imu.launch" />
+        <include if="$(arg use_laser)" file="$(find rmus_bringup)/launch/rplidar.launch" />
 
         <!-- Rgbd -->
-        <include if="$(arg use_rgbd)" file="$(find ep_driver)/launch/ep_realsense.launch" />
-
-        <!-- Odometry -->
-        <node if="$(arg use_odometry)" name="ep_odometry_node" pkg="ep_driver" type="odom_pub.py" output="screen" />
+        <include if="$(arg use_rgbd)" file="$(find rmus_bringup)/launch/realsense.launch" />
 
         <!-- base control node -->
-        <node if="$(arg use_actuators)" name="ep_comm_node" pkg="ep_driver" type="ep_comm_node.py" output="screen" />
+        <node if="$(arg use_ep)" name="ep_comm_node" pkg="ep_driver" type="ep_comm_node.py" output="screen">
+            <remap from="/ep/imu" to="/imu/data_raw" />
+        </node>
 
     </group>
 </launch>
