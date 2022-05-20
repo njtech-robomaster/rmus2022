@@ -60,8 +60,8 @@ class epRobot(object):
         data.angular.z = max(-1.0, data.angular.z)
         data.angular.z = min(1.0, data.angular.z)
 
-        self.ep_chassis.move(x=data.linear.x, y=-data.linear.y,
-                             z=-data.angular.z*57.2).wait_for_completed()
+        self.ep_chassis.drive_speed(x=data.linear.x, y=-data.linear.y,
+                             z=-data.angular.z*57.2)
 
     def callback_position(self, data):
         rospy.loginfo(rospy.get_caller_id() + 'I heard %f %f %f',
@@ -83,11 +83,11 @@ class epRobot(object):
                       data.position.x, data.position.y)
 
         if abs(data.position.x) < 1e-10 and abs(data.position.y) < 1e-10:
-            self.ep_arm.recenter().wait_for_completed()
+            self.ep_arm.recenter()
             # cmd = 'robotic_arm recenter;'
         else:
             self.ep_arm.moveto(
-                data.position.x, data.position.y).wait_for_completed()
+                data.position.x, data.position.y)
 
     def callback_gripper(self, data):
 
