@@ -3,7 +3,7 @@ global_costmap:
   height: 20.0
   global_frame: map
   rolling_window: false
-  inflation_radius: 0.2
+  inflation_radius: 0.3
   plugins:
     - name: static
       type: costmap_2d::StaticLayer

@@ -1,5 +1,17 @@
-base_global_planner: navfn/NavfnROS
+base_global_planner: global_planner/GlobalPlanner
 
-NavfnROS:
-  allow_unknown: true
+GlobalPlanner:
+  allow_unknown: false
   default_tolerance: 0.1
+  visualize_potential: false
+  use_dijkstra: true
+  use_quadratic: true
+  use_grid_path: false
+  old_navfn_behavior: false
+  lethal_cost: 253
+  neutral_cost: 50
+  cost_factor: 3
+  publish_potential: true
+  orientation_mode: 2
+  orientation_window_size: 5
+  outline_map: false

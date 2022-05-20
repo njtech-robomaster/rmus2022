@@ -10,7 +10,7 @@ track_unknown_space: true
 obstacle_range: 4.0
 raytrace_range: 8.0
 
-footprint: [[-0.145, -0.145], [-0.145, 0.145], [0.145, 0.145], [0.145, -0.145]]
+footprint: [[-0.160, -0.120], [-0.160, 0.120], [0.160, 0.120], [0.160, -0.120]]
 
 static:
   map_topic: map

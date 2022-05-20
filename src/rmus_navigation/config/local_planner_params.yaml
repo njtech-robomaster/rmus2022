@@ -9,7 +9,7 @@ TebLocalPlannerROS:
   teb_autosize: true
   dt_ref: 0.10
   dt_hysteresis: 0.01
-  global_plan_overwrite_orientation: true
+  global_plan_overwrite_orientation: false
   max_global_plan_lookahead_dist: 0
   feasibility_check_no_poses: 10
   allow_init_with_backwards_motion: true
@@ -19,18 +19,18 @@ TebLocalPlannerROS:
   # Robot
 
   max_vel_x: 0.5
-  max_vel_x_backwards: 0.5
-  max_vel_y: 0.5
-  max_vel_theta: 0.5
-  acc_lim_x: 5.0
-  acc_lim_y: 5.0
-  acc_lim_theta: 10.0
+  max_vel_x_backwards: 0.49
+  max_vel_y: 0.49
+  max_vel_theta: 0.49
+  acc_lim_x: 0
+  acc_lim_y: 0
+  acc_lim_theta: 0
   min_turning_radius: 0.0
   wheelbase: 0.0
 
   footprint_model:
     type: "polygon"
-    vertices: [[-0.145, -0.145], [-0.145, 0.145], [0.145, 0.145], [0.145, -0.145]]
+    vertices: [[-0.160, -0.120], [-0.160, 0.120], [0.160, 0.120], [0.160, -0.120]]
 
   # GoalTolerance
 
@@ -41,10 +41,12 @@ TebLocalPlannerROS:
   # Obstacles
 
   min_obstacle_dist: 0.05
-  inflation_dist: 0.5
-  include_costmap_obstacles: True
+  inflation_dist: 0.3
+  include_costmap_obstacles: true
   costmap_obstacles_behind_robot_dist: 5.0
-  obstacle_poses_affected: 30
+  obstacle_poses_affected: 10
+  obstacle_association_force_inclusion_factor: 4.0
+  obstacle_association_cutoff_factor: 10.0
   costmap_converter_plugin: ""
   costmap_converter_spin_thread: True
   costmap_converter_rate: 5
@@ -60,12 +62,12 @@ TebLocalPlannerROS:
   weight_max_vel_y: 1
   weight_max_vel_theta: 1
   weight_acc_lim_x: 1
-  weight_acc_lim_y: 1
+  weight_acc_lim_y: 3
   weight_acc_lim_theta: 3
   weight_kinematics_nh: 0
   weight_kinematics_forward_drive: 0
   weight_kinematics_turning_radius: 0
-  weight_optimaltime: 10
+  weight_optimaltime: 20
   weight_obstacle: 50
 
   # Homotopy Class Planner

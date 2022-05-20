@@ -264,19 +264,28 @@ void GraspPlace::aiming_done() {
 			arm.reset_position();
 			this->state = State::MOVING_BACK;
 
-			chassis_move.execute(
-			    -task.back_distance, 0, 0,
-			    [this](const MoveFeedback &feedback) {
-				    if (feedback.state == MoveFeedback::State::SUCCESS) {
-					    this->state = State::IDLE;
-					    action_server.setSucceeded();
-				    } else if (feedback.state == MoveFeedback::State::FAIL) {
-					    this->state = State::IDLE;
-					    action_server.setAborted(
-					        arm_controller_srvs::GraspPlaceResult(),
-					        "Moving back failed");
-				    }
-			    });
+			bool skip_moving_back =
+			    ros::param::param("~skip_moving_back", true);
+			if (skip_moving_back) {
+				this->state = State::IDLE;
+				action_server.setSucceeded();
+
+			} else {
+				chassis_move.execute(
+				    -task.back_distance, 0, 0,
+				    [this](const MoveFeedback &feedback) {
+					    if (feedback.state == MoveFeedback::State::SUCCESS) {
+						    this->state = State::IDLE;
+						    action_server.setSucceeded();
+					    } else if (feedback.state ==
+					               MoveFeedback::State::FAIL) {
+						    this->state = State::IDLE;
+						    action_server.setAborted(
+						        arm_controller_srvs::GraspPlaceResult(),
+						        "Moving back failed");
+					    }
+				    });
+			}
 		});
 	});
 }
@@ -342,7 +351,7 @@ std::optional<TaskDetails> GraspPlace::get_task_details(
 
 		TaskDetails t;
 		t.target = filtered[0];
-		t.back_distance = 0.2;
+		t.back_distance = 0.10;
 		t.ideal_seperation = 0.20;
 		t.ideal_observing_distance = 0.30;
 		if (action == Action::GRASP_ORE) {
@@ -363,7 +372,7 @@ std::optional<TaskDetails> GraspPlace::get_task_details(
 
 				TaskDetails t;
 				t.target = pose;
-				t.back_distance = 0.2;
+				t.back_distance = 0.10;
 				t.ideal_seperation = 0.20;
 				t.pick = false;
 				t.ideal_observing_distance = 0.30;

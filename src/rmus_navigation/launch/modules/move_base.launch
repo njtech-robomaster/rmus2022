@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-    <arg name="static_map" value="20220326_01_modified" />
+    <arg name="static_map" value="20220520_ground_modified" />
 
     <node name="map_server" pkg="map_server" type="map_server" args="$(find rmus_navigation)/maps/$(arg static_map)/map.yaml" output="screen">
         <remap from="map" to="map_nav" />
