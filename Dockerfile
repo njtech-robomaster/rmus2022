@@ -27,6 +27,7 @@ RUN apt-get update \
        python3-sphinx                  \
        stow                            \
        gdb                             \
+       ros-noetic-teleop-twist-keyboard\
  && wget -O /etc/apt/trusted.gpg.d/llvm.asc 'https://apt.llvm.org/llvm-snapshot.gpg.key' \
  && wget -O /etc/apt/trusted.gpg.d/realsense.asc 'https://keyserver.ubuntu.com/pks/lookup?op=hget&search=490918728cb41b2e9f4478a11f27750d' \
  && echo 'deb https://apt.llvm.org/focal/ llvm-toolchain-focal main' > /etc/apt/sources.list.d/llvm.list \
