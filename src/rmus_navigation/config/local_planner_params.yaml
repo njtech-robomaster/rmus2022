@@ -19,12 +19,12 @@ TebLocalPlannerROS:
   # Robot
 
   max_vel_x: 0.5
-  max_vel_x_backwards: 0.49
-  max_vel_y: 0.49
-  max_vel_theta: 0.49
-  acc_lim_x: 0
-  acc_lim_y: 0
-  acc_lim_theta: 0
+  max_vel_x_backwards: 0.5
+  max_vel_y: 0.5
+  max_vel_theta: 0.5
+  acc_lim_x: 5.0
+  acc_lim_y: 5.0
+  acc_lim_theta: 10.0
   min_turning_radius: 0.0
   wheelbase: 0.0
 
@@ -40,13 +40,13 @@ TebLocalPlannerROS:
 
   # Obstacles
 
-  min_obstacle_dist: 0.05
+  min_obstacle_dist: 0.01
   inflation_dist: 0.3
   include_costmap_obstacles: true
   costmap_obstacles_behind_robot_dist: 5.0
   obstacle_poses_affected: 10
-  obstacle_association_force_inclusion_factor: 4.0
-  obstacle_association_cutoff_factor: 10.0
+  obstacle_association_force_inclusion_factor: 30.0
+  obstacle_association_cutoff_factor: 100.0
 
   # Optimization
 
