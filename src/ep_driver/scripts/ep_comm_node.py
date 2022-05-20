@@ -5,7 +5,7 @@ import rospy
 import tf
 import robomaster
 from robomaster import robot
-from geometry_msgs.msg import Pose, Point, Quaternion, Twist, Vector3
+from geometry_msgs.msg import Pose, Point, Quaternion, Twist
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Imu
 
@@ -13,6 +13,7 @@ from sensor_msgs.msg import Imu
 class epRobot(object):
 
     def __init__(self) -> None:
+        self._arm_action=None
         pass
 
     def callback(self, data):
@@ -26,10 +27,16 @@ class epRobot(object):
         self.ep_chassis.drive_speed(x=data.linear.x, y=-data.linear.y, z=-data.angular.z*57.3, timeout=0.5)
 
     def callback_arm(self, data):
+        if self._arm_action != None:
+            is_completed = self._arm_action.is_completed
+            if not is_completed:
+                return
+
+        print('move arm to %f, %f' % (data.position.x, data.position.y))
         if abs(data.position.x) < 1e-10 and abs(data.position.y) < 1e-10:
-            self.ep_arm.recenter()
+            self._arm_action = self.ep_arm.recenter()
         else:
-            self.ep_arm.moveto(data.position.x, data.position.y)
+            self._arm_action = self.ep_arm.moveto(data.position.x * 1000, data.position.y * 1000)
 
     def callback_gripper(self, data):
         if abs(data.x - 1.0) < 1e-10:
