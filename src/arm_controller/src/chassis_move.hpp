@@ -4,7 +4,7 @@
 
 class MoveFeedback {
   public:
-	enum class State { INIT, FIXING_YAW, FIXING_XY, SUCCESS, FAIL };
+	enum class State { INIT, MOVING, FIXING_YAW, FIXING_XY, SUCCESS, FAIL };
 
 	State state = State::INIT;
 	double goal_dx = NAN;
@@ -29,8 +29,11 @@ class ChassisMove {
   private:
 	ros::NodeHandle nh;
 	ros::Subscriber odom_sub;
+	ros::Publisher postion_pub;
 	ros::Publisher cmd_vel_pub;
 	ros::Publisher chassis_move_target_pub;
+
+	std::optional<std::tuple<ros::Time, double, double>> last_odom_pos;
 
 	std::function<void(const MoveFeedback &)> current_callback;
 	MoveFeedback goal;
