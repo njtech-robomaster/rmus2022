@@ -89,7 +89,6 @@ void GraspPlace::goalCallback() {
 	if (this->action == Action::GRASP_ORE) {
 		arm.open_gripper();
 	}
-	arm.reset_position();
 
 	this->state = State::OBSERVING1;
 	observe_retries = 0;
@@ -250,17 +249,24 @@ void GraspPlace::aiming_done() {
 	geometry_msgs::PoseStamped target_relative =
 	    tf_buffer.transform(task.target, "arm_link", ros::Time(0), "odom");
 
-	arm.move_to(target_relative.pose.position.x,
-	            target_relative.pose.position.y);
+	double arm_x = target_relative.pose.position.x;
+	double arm_y = target_relative.pose.position.y;
+	if (arm_x < task.min_arm_x) {
+		arm_x = *task.min_arm_x;
+	}
 
-	async_wait.wait(ros::Duration(2), [this] {
+	arm.move_to(arm_x, arm_y);
+	arm.move_to(arm_x, arm_y);
+
+	async_wait.wait(ros::Duration(3), [this] {
 		if (task.pick) {
 			arm.close_gripper();
 		} else {
 			arm.open_gripper();
 		}
 
-		async_wait.wait(ros::Duration(2), [this] {
+		async_wait.wait(ros::Duration(3), [this] {
+			arm.reset_position();
 			arm.reset_position();
 			this->state = State::MOVING_BACK;
 
@@ -318,7 +324,7 @@ std::optional<TaskDetails> GraspPlace::get_task_details(
 			if (marker.id != this->marker_id)
 				continue;
 			auto pose = get_marker_pose(marker);
-			offset_pose(pose, {-0.045 / 2 + 0.050, 0, 0});
+			offset_pose(pose, {-0.045 / 2 + 0.200, 0, 0});
 			pose = tf_buffer.transform(pose, "base_link");
 
 			double cube_height = pose.pose.position.z + BASE_LINK_HEIGHT;
@@ -356,6 +362,7 @@ std::optional<TaskDetails> GraspPlace::get_task_details(
 		t.ideal_observing_distance = 0.30;
 		if (action == Action::GRASP_ORE) {
 			t.pick = true;
+			t.min_arm_x = 0.185;
 		} else if (action == Action::STACK_ORE) {
 			t.pick = false;
 		}
@@ -368,7 +375,7 @@ std::optional<TaskDetails> GraspPlace::get_task_details(
 			if (marker.id == this->marker_id) {
 
 				auto pose = get_marker_pose(marker);
-				offset_pose(pose, {-0.120 / 2 + 0.050, 0, 0.060});
+				offset_pose(pose, {-0.120 / 2 + 0.050, 0, 0.150});
 
 				TaskDetails t;
 				t.target = pose;
@@ -376,6 +383,7 @@ std::optional<TaskDetails> GraspPlace::get_task_details(
 				t.ideal_seperation = 0.20;
 				t.pick = false;
 				t.ideal_observing_distance = 0.30;
+				t.min_arm_x = 0.185;
 				return t;
 			}
 		}

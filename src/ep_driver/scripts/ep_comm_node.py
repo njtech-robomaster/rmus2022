@@ -30,7 +30,8 @@ class epRobot(object):
         if self._arm_action != None:
             is_completed = self._arm_action.is_completed
             if not is_completed:
-                return
+                print('arm action pending')
+                self._arm_action._update_action_state(2)
 
         print('move arm to %f, %f' % (data.position.x, data.position.y))
         if abs(data.position.x) < 1e-10 and abs(data.position.y) < 1e-10:
@@ -40,9 +41,11 @@ class epRobot(object):
 
     def callback_gripper(self, data):
         if abs(data.x - 1.0) < 1e-10:
-            self.ep_gripper.open(power=50)
-        elif abs(data.x) < 1e-10:
+            print('Close gripper')
             self.ep_gripper.close(power=50)
+        elif abs(data.x) < 1e-10:
+            print('Open gripper')
+            self.ep_gripper.open(power=50)
 
     def sub_position_handler(self, position_info):
         x, y, z = position_info

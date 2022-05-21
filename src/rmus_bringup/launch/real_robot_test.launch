@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="visualization" default="false" />
+    <arg name="robot_mode" default="real" />
+
+    <include file="$(find ep_driver)/launch/ep_description.launch" pass_all_args="true" />
+    <include file="$(find ep_driver)/launch/bringup.launch" pass_all_args="true" />
+    <include file="$(find rmus_cartographer)/launch/modules/cartographer_mapping.launch" />
+    <node name="move_base" pkg="move_base" type="move_base" output="screen">
+        <rosparam file="$(find rmus_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find rmus_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find rmus_navigation)/config/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find rmus_navigation)/config/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find rmus_navigation)/config/local_planner_params.yaml" command="load" />
+        <rosparam file="$(find rmus_navigation)/config/global_planner_params.yaml" command="load" />
+
+        <param name="controller_frequency" value="10.0" />
+        <param name="recovery_behaviour_enabled" value="true" />
+
+        <remap from="cmd_vel" to="/cmd_vel" />
+        <remap from="odom" to="/ep/odom" />
+    </node>
+    <node name="apriltag_marker_detector" pkg="apriltag_marker_detector" type="apriltag_marker_detector" output="screen">
+        <param name="preview_preprocess" value="false" />
+        <param name="preview_results" value="false" />
+    </node>
+    <node name="arm_controller" pkg="arm_controller" type="arm_controller" output="screen" />
+
+</launch>
