@@ -14,6 +14,7 @@ class epRobot(object):
 
     def __init__(self) -> None:
         self._arm_action=None
+        self._chassis_action=None
         pass
 
     def callback(self, data):
@@ -25,6 +26,22 @@ class epRobot(object):
         data.angular.z = min(1.0, data.angular.z)
 
         self.ep_chassis.drive_speed(x=data.linear.x, y=-data.linear.y, z=-data.angular.z*57.3, timeout=0.5)
+
+    def callback_position(self, data):
+        data.linear.x = max(-0.5, data.linear.x)
+        data.linear.x = min(0.5, data.linear.x)
+        data.linear.y = max(-0.5, data.linear.y)
+        data.linear.y = min(0.5, data.linear.y)
+        data.angular.z = max(-900.0, data.angular.z)
+        data.angular.z = min(900.0, data.angular.z)
+        if self._chassis_action != None:
+            is_completed = self._chassis_action.is_completed
+            if not is_completed:
+                print('chassis action pending')
+                self._chassis_action._update_action_state(2)
+
+        print('move chassis %f, %f, %f' % (data.linear.x, data.linear.y, data.angular.z))
+        self._chassis_action = self.ep_chassis.move(x=data.linear.x, y=-data.linear.y, z=-data.angular.z)
 
     def callback_arm(self, data):
         if self._arm_action != None:
@@ -122,6 +139,7 @@ class epRobot(object):
         self.ep_chassis.sub_velocity(freq=10, callback=self.sub_velocity_info_handler)
 
         rospy.Subscriber('cmd_vel', Twist, self.callback)
+        rospy.Subscriber('cmd_position', Twist, self.callback_position)
         rospy.Subscriber('arm_position', Pose, self.callback_arm)
         rospy.Subscriber('arm_gripper', Point, self.callback_gripper)
 
