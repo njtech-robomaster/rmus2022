@@ -259,14 +259,14 @@ void GraspPlace::aiming_done() {
 
 	arm.move_to(arm_x, arm_y);
 
-	async_wait.wait(ros::Duration(3), [this] {
+	async_wait.wait(ros::Duration(1), [this] {
 		if (task.pick) {
 			arm.close_gripper();
 		} else {
 			arm.open_gripper();
 		}
 
-		async_wait.wait(ros::Duration(3), [this] {
+		async_wait.wait(ros::Duration(1), [this] {
 			arm.reset_position();
 			arm.reset_position();
 			this->state = State::MOVING_BACK;
