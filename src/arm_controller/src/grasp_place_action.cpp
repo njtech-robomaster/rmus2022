@@ -178,7 +178,8 @@ void GraspPlace::onFiducialMarkers(
 		} else {
 
 			chassis_move.execute(
-			    goal_x, goal_y, goal_yaw, [this](const MoveFeedback &feedback) {
+			    goal_x, goal_y, goal_yaw, task.target.header.stamp,
+			    [this](const MoveFeedback &feedback) {
 				    if (this->state != State::AIMING1)
 					    return;
 
@@ -221,7 +222,8 @@ void GraspPlace::onFiducialMarkers(
 		    compute_goal(task.target, task.ideal_seperation);
 
 		chassis_move.execute(
-		    goal_x, goal_y, goal_yaw, [this](const MoveFeedback &feedback) {
+		    goal_x, goal_y, goal_yaw, task.target.header.stamp,
+		    [this](const MoveFeedback &feedback) {
 			    if (this->state != State::AIMING2)
 				    return;
 
@@ -256,7 +258,6 @@ void GraspPlace::aiming_done() {
 	}
 
 	arm.move_to(arm_x, arm_y);
-	arm.move_to(arm_x, arm_y);
 
 	async_wait.wait(ros::Duration(3), [this] {
 		if (task.pick) {
@@ -278,7 +279,7 @@ void GraspPlace::aiming_done() {
 
 			} else {
 				chassis_move.execute(
-				    -task.back_distance, 0, 0,
+				    -task.back_distance, 0, 0, ros::Time(0),
 				    [this](const MoveFeedback &feedback) {
 					    if (feedback.state == MoveFeedback::State::SUCCESS) {
 						    this->state = State::IDLE;
@@ -324,7 +325,8 @@ std::optional<TaskDetails> GraspPlace::get_task_details(
 			if (marker.id != this->marker_id)
 				continue;
 			auto pose = get_marker_pose(marker);
-			offset_pose(pose, {-0.045 / 2 + 0.200, 0, 0});
+			offset_pose(pose, {-0.045 / 2 + 0.010, 0, 0});
+			offset_pose(pose, {0.125, 0, 0});
 			pose = tf_buffer.transform(pose, "base_link");
 
 			double cube_height = pose.pose.position.z + BASE_LINK_HEIGHT;
@@ -376,7 +378,8 @@ std::optional<TaskDetails> GraspPlace::get_task_details(
 			if (marker.id == this->marker_id) {
 
 				auto pose = get_marker_pose(marker);
-				offset_pose(pose, {-0.120 / 2 + 0.050, 0, 0.150});
+				offset_pose(pose, {-0.080, 0, 0});
+				offset_pose(pose, {0.125, 0, 0});
 
 				TaskDetails t;
 				t.target = pose;

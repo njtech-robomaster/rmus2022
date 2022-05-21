@@ -11,7 +11,7 @@ static constexpr double sign(double x) {
 	return x < 0 ? -1 : 1;
 }
 
-ChassisMove::ChassisMove() {
+ChassisMove::ChassisMove() : tf_listener(tf_buffer) {
 	chassis_move_target_pub =
 	    nh.advertise<geometry_msgs::PoseStamped>("chassis_move_target", 1);
 	cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
@@ -25,12 +25,7 @@ ChassisMove::ChassisMove() {
 		    double odom_yaw = get_yaw(odom->pose.pose.orientation);
 
 		    if (goal.state == MoveFeedback::State::INIT) {
-			    goal.goal_x = odom_x + goal.goal_dx * std::cos(odom_yaw) -
-			                  goal.goal_dy * std::sin(odom_yaw);
-			    goal.goal_y = odom_y + goal.goal_dx * std::sin(odom_yaw) +
-			                  goal.goal_dy * std::cos(odom_yaw);
-			    goal.goal_theta = normalize_angle(odom_yaw + goal.goal_dtheta);
-
+			    idle_ticks = 0;
 			    goal.state = MoveFeedback::State::FIXING_YAW;
 		    }
 
@@ -47,7 +42,7 @@ ChassisMove::ChassisMove() {
 			    bool moving = false;
 			    geometry_msgs::Twist twist;
 			    if (std::abs(goal.error_theta) > YAW_TOLERANCE) {
-				    twist.angular.z = 0.1 * sign(goal.error_theta);
+				    twist.angular.z = 0.2 * sign(goal.error_theta);
 				    moving = true;
 			    }
 			    cmd_vel_pub.publish(twist);
@@ -64,6 +59,16 @@ ChassisMove::ChassisMove() {
 
 		    case MoveFeedback::State::FIXING_XY: {
 
+			    bool perform_control = idle_ticks == 0;
+			    idle_ticks++;
+			    idle_ticks %= 3;
+
+			    if (!perform_control) {
+				    geometry_msgs::Twist twist;
+				    cmd_vel_pub.publish(twist);
+				    return;
+			    }
+
 			    bool moving = false;
 			    geometry_msgs::Twist twist;
 			    if (std::abs(goal.error_x) > X_TOLERANCE) {
@@ -71,7 +76,7 @@ ChassisMove::ChassisMove() {
 				    moving = true;
 			    }
 			    if (std::abs(goal.error_y) > Y_TOLERANCE) {
-				    twist.linear.y = 0.1 * sign(goal.error_y);
+				    twist.linear.y = 0.2 * sign(goal.error_y);
 				    moving = true;
 			    }
 			    cmd_vel_pub.publish(twist);
@@ -97,6 +102,7 @@ ChassisMove::ChassisMove() {
 }
 
 void ChassisMove::execute(double dx, double dy, double dtheta,
+                          ros::Time timestamp,
                           std::function<void(const MoveFeedback &)> callback) {
 
 	if (current_callback != nullptr) {
@@ -111,4 +117,18 @@ void ChassisMove::execute(double dx, double dy, double dtheta,
 	goal.goal_dx = dx;
 	goal.goal_dy = dy;
 	goal.goal_dtheta = dtheta;
+	goal.goal_timestamp = timestamp;
+
+	geometry_msgs::PoseStamped goal_in_base_link;
+	goal_in_base_link.header.frame_id = "base_link";
+	goal_in_base_link.header.stamp = timestamp;
+	goal_in_base_link.pose.position.x = dx;
+	goal_in_base_link.pose.position.y = dy;
+	goal_in_base_link.pose.orientation = quaternionMsgFromYaw(dtheta);
+	geometry_msgs::PoseStamped goal_in_odom =
+	    tf_buffer.transform(goal_in_base_link, "odom");
+	goal.goal_x = goal_in_odom.pose.position.x;
+	goal.goal_y = goal_in_odom.pose.position.y;
+	goal.goal_theta = get_yaw(goal_in_odom.pose.orientation);
+	chassis_move_target_pub.publish(goal_in_odom);
 }

@@ -2,6 +2,9 @@
 <launch>
     <arg name="visualization" default="false" />
     <arg name="configuration_basename" value="mapping.lua" />
+    <node name="odom_republisher" pkg="odom_republisher" type="odom_republisher" output="screen">
+        <remap from="odom" to="/ep/odom" />
+    </node>
     <node name="cartographer_node" pkg="cartographer_ros" type="cartographer_node" args="
           -configuration_directory $(find rmus_cartographer)/config
           -configuration_basename $(arg configuration_basename)">
