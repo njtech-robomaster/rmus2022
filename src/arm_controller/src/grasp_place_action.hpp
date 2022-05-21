@@ -20,6 +20,7 @@ class TaskDetails {
 	double back_distance;
 	double ideal_observing_distance;
 	std::optional<double> min_arm_x;
+	double arm_y;
 };
 
 class GraspPlace {

@@ -250,7 +250,7 @@ void GraspPlace::aiming_done() {
 	    tf_buffer.transform(task.target, "arm_link", ros::Time(0), "odom");
 
 	double arm_x = target_relative.pose.position.x;
-	double arm_y = target_relative.pose.position.y;
+	double arm_y = task.arm_y;
 	if (arm_x < task.min_arm_x) {
 		arm_x = *task.min_arm_x;
 	}
@@ -360,9 +360,10 @@ std::optional<TaskDetails> GraspPlace::get_task_details(
 		t.back_distance = 0.10;
 		t.ideal_seperation = 0.20;
 		t.ideal_observing_distance = 0.30;
+		t.arm_y = -0.02;
+		t.min_arm_x = 0.181;
 		if (action == Action::GRASP_ORE) {
 			t.pick = true;
-			t.min_arm_x = 0.185;
 		} else if (action == Action::STACK_ORE) {
 			t.pick = false;
 		}
@@ -383,7 +384,8 @@ std::optional<TaskDetails> GraspPlace::get_task_details(
 				t.ideal_seperation = 0.20;
 				t.pick = false;
 				t.ideal_observing_distance = 0.30;
-				t.min_arm_x = 0.185;
+				t.min_arm_x = 0.181;
+				t.arm_y = 0.12;
 				return t;
 			}
 		}
