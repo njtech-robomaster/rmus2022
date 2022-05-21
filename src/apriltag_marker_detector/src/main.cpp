@@ -5,6 +5,10 @@
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseArray.h>
 #include <image_transport/image_transport.h>
+#include <image_transport/subscriber_filter.h>
+#include <message_filters/cache.h>
+#include <message_filters/subscriber.h>
+#include <message_filters/sync_policies/exact_time.h>
 #include <opencv2/calib3d.hpp>
 #include <opencv2/highgui.hpp>
 #include <ros/ros.h>
@@ -18,8 +22,12 @@
 
 using namespace apriltag_marker_detector;
 
+using CameraSyncPolicy = message_filters::sync_policies::ExactTime<
+    sensor_msgs::Image, sensor_msgs::Image, sensor_msgs::CameraInfo>;
+
 using Executor =
-    AsyncExecutor<sensor_msgs::ImageConstPtr, sensor_msgs::CameraInfoConstPtr>;
+    AsyncExecutor<sensor_msgs::Image::ConstPtr, sensor_msgs::Image::ConstPtr,
+                  sensor_msgs::CameraInfo::ConstPtr>;
 
 const std::string preprocess_window_name = "Marker Preprocess";
 const std::string result_window_name = "Marker Detections";
@@ -54,8 +62,13 @@ std::unique_ptr<Detector> detector;
 std::unique_ptr<Executor> executor;
 ros::Publisher markers_pub;
 ros::Publisher pose_array_pub;
-image_transport::CameraSubscriber color_camera_sub;
 image_transport::Subscriber color_image_sub;
+std::unique_ptr<message_filters::Synchronizer<CameraSyncPolicy>> camera_sync;
+
+std::unique_ptr<image_transport::SubscriberFilter> color_sub;
+std::unique_ptr<image_transport::SubscriberFilter> depth_sub;
+std::unique_ptr<message_filters::Subscriber<sensor_msgs::CameraInfo>>
+    camera_info_sub;
 
 void publish_pose_array(const apriltag_msgs::ApriltagMarkerArray &markers,
                         const std_msgs::Header &header) {
@@ -114,8 +127,69 @@ void show_results(const cv::Mat &image,
 	cv::imshow(result_window_name, display);
 }
 
+std::optional<double>
+mean_depth_in_polygon(const cv::Mat &depth_img,
+                      const std::array<cv::Point, 4> &corners) {
+
+	cv::Rect bounding_rect = cv::boundingRect(corners);
+	bounding_rect &= {{0, 0}, depth_img.size()};
+	cv::Mat roi = depth_img(bounding_rect);
+	cv::Mat mask = cv::Mat::zeros(roi.rows, roi.cols, CV_8UC1);
+	std::array<cv::Point, 4> new_corners;
+	for (size_t i = 0; i < 4; i++) {
+		new_corners[i] = corners[i] - bounding_rect.tl();
+	}
+	cv::fillConvexPoly(mask, new_corners, 0xff);
+	size_t count = 0;
+	double depth = 0.;
+
+	if (depth_img.type() == CV_32FC1) {
+		double sum = 0;
+		for (int y = 0; y < roi.rows; y++) {
+			for (int x = 0; x < roi.cols; x++) {
+				if (mask.at<uint8_t>(y, x) != 0) {
+					float d = roi.at<float>(y, x);
+					if (std::isfinite(d) && d > 0) {
+						count++;
+						sum += d;
+					}
+				}
+			}
+		}
+		if (count == 0.) {
+			return std::nullopt;
+		}
+		depth = sum / count;
+
+	} else if (depth_img.type() == CV_16UC1) {
+		unsigned long long sum = 0;
+		for (int y = 0; y < roi.rows; y++) {
+			for (int x = 0; x < roi.cols; x++) {
+				if (mask.at<uint8_t>(y, x) != 0) {
+					uint16_t d = roi.at<uint16_t>(y, x);
+					if (d != 0) {
+						count++;
+						sum += d;
+					}
+				}
+			}
+		}
+		if (count == 0) {
+			return std::nullopt;
+		}
+		uint16_t depth_mm = sum / count;
+		depth = depth_mm / 1000.0;
+
+	} else {
+		throw std::runtime_error("Bad type");
+	}
+
+	return depth;
+}
+
 apriltag_msgs::ApriltagMarkerArray
 solve_markers_pose(const sensor_msgs::ImageConstPtr &image_msg,
+                   const sensor_msgs::Image::ConstPtr &depth_msg,
                    const sensor_msgs::CameraInfoConstPtr &camera_info_msg,
                    const std::vector<TagDetection> &detections) {
 	auto k = camera_info_msg->K;
@@ -152,6 +226,18 @@ solve_markers_pose(const sensor_msgs::ImageConstPtr &image_msg,
 			continue;
 		}
 
+		bool use_depth_image = ros::param::param("~use_depth_image", true);
+		if (use_depth_image) {
+			auto cv_image_depth = cv_bridge::toCvShare(depth_msg);
+			auto depth_img = cv_image_depth->image;
+			auto depth = mean_depth_in_polygon(
+			    depth_img, {detection.corners[0], detection.corners[1],
+			                detection.corners[2], detection.corners[3]});
+			if (depth.has_value()) {
+				tvec[2] = *depth;
+			}
+		}
+
 		cv::Matx33d cv_rotation_matrix;
 		cv::Rodrigues(rvec, cv_rotation_matrix);
 		Eigen::Matrix3d rotation_matrix;
@@ -172,8 +258,9 @@ solve_markers_pose(const sensor_msgs::ImageConstPtr &image_msg,
 	return markers;
 }
 
-void process_frame(const sensor_msgs::ImageConstPtr &image_msg,
-                   const sensor_msgs::CameraInfoConstPtr &camera_info_msg) {
+void process_frame(const sensor_msgs::Image::ConstPtr &image_msg,
+                   const sensor_msgs::Image::ConstPtr &depth_msg,
+                   const sensor_msgs::CameraInfo::ConstPtr &camera_info_msg) {
 
 	auto cv_image = cv_bridge::cvtColor(cv_bridge::toCvShare(image_msg),
 	                                    sensor_msgs::image_encodings::BGR8);
@@ -188,8 +275,8 @@ void process_frame(const sensor_msgs::ImageConstPtr &image_msg,
 	}
 
 	if (!detection_only_mode) {
-		auto markers =
-		    solve_markers_pose(image_msg, camera_info_msg, detections);
+		auto markers = solve_markers_pose(image_msg, depth_msg, camera_info_msg,
+		                                  detections);
 		markers_pub.publish(markers);
 
 		if (enable_pose_array) {
@@ -233,15 +320,20 @@ int main(int argc, char *argv[]) {
 		color_image_sub =
 		    it.subscribe("camera/color/image_raw", 1,
 		                 [&](const sensor_msgs::ImageConstPtr &image_msg) {
-			                 executor->feed(image_msg, nullptr);
+			                 executor->feed(image_msg, nullptr, nullptr);
 		                 });
 	} else {
-		color_camera_sub = it.subscribeCamera(
-		    "camera/color/image_raw", 1,
-		    [&](const sensor_msgs::ImageConstPtr &image_msg,
-		        const sensor_msgs::CameraInfoConstPtr &camera_info_msg) {
-			    executor->feed(image_msg, camera_info_msg);
-		    });
+		color_sub = std::make_unique<image_transport::SubscriberFilter>(
+		    it, "camera/color/image_raw", 10);
+		depth_sub = std::make_unique<image_transport::SubscriberFilter>(
+		    it, "camera/aligned_depth_to_color/image_raw", 10);
+		camera_info_sub = std::make_unique<
+		    message_filters::Subscriber<sensor_msgs::CameraInfo>>(
+		    nh, "camera/color/camera_info", 10);
+		camera_sync =
+		    std::make_unique<message_filters::Synchronizer<CameraSyncPolicy>>(
+		        CameraSyncPolicy(10), *color_sub, *depth_sub, *camera_info_sub);
+		camera_sync->registerCallback(&Executor::feed, executor.get());
 	}
 
 	ros::spin();
