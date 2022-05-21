@@ -126,7 +126,7 @@ void ChassisMove::execute(double dx, double dy, double dtheta,
 	goal_in_base_link.pose.position.y = dy;
 	goal_in_base_link.pose.orientation = quaternionMsgFromYaw(dtheta);
 	geometry_msgs::PoseStamped goal_in_odom =
-	    tf_buffer.transform(goal_in_base_link, "odom");
+	    tf_buffer.transform(goal_in_base_link, "odom", ros::Duration(0.5));
 	goal.goal_x = goal_in_odom.pose.position.x;
 	goal.goal_y = goal_in_odom.pose.position.y;
 	goal.goal_theta = get_yaw(goal_in_odom.pose.orientation);
