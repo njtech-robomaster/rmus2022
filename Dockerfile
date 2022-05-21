@@ -60,4 +60,4 @@ ADD --chown=sim2real build.sh /home/sim2real/workspace/
 RUN GENERATE_COMPILE_COMMANDS=false /home/sim2real/workspace/build.sh
 ADD --chown=sim2real entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["roslaunch", "--wait", "arm_controller", "grasp_evaluation.launch"]
+CMD ["roslaunch", "--wait", "rmus_bringup", "overall.launch"]
